@@ -1,0 +1,22 @@
+.bg--white {
+  background-color: #ffffff;
+}
+.bg--black {
+  background-color: #000000;
+}
+.block-center--1200 {
+  width: 1200px;
+  margin: 0 auto;
+}
+.floatL {
+  float: left;
+}
+.floatR {
+  float: right;
+}
+.clear-both {
+  clear: both;
+}
+.textCenter {
+  text-align: center;
+}
