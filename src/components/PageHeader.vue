@@ -27,7 +27,7 @@
           <ul class="nav-list">
             <router-link
               :to="item.path"
-              v-for="(item, index) in rotelist"
+              v-for="(item, index) in list"
               :key="index"
               ><li :class="item.titles.includes(myroute) ? 'li_active' : ''">
                 {{ item.meta.title }}
@@ -43,16 +43,23 @@
 import { mapState } from "vuex";
 export default {
   data() {
-    return {};
+    return {
+      list: []
+    };
   },
-  mounted() {},
+  mounted() {
+    this.list = [];
+    for (let index = 0; index < this.rotelist.length; index++) {
+      if (this.rotelist[index].isNav) {
+        this.list.push(this.rotelist[index]);
+      }
+    }
+  },
   computed: {
     ...mapState({
       rotelist: state => state.roterList
     }),
     myroute: function() {
-      console.log(this.$route);
-      console.log(this.rotelist);
       return this.$route.meta.title;
     }
   }

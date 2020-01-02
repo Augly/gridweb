@@ -4,13 +4,14 @@
  * @Author: zero
  * @Date: 2019-12-30 17:46:21
  * @LastEditors  : zero
- * @LastEditTime : 2019-12-31 17:47:52
+ * @LastEditTime : 2020-01-02 19:21:05
  */
 import Vue from "vue";
 import store from "@/store";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
 import RouteView from "@/layout/basic.vue";
+import { Personl, Organization, Business } from "@/components";
 Vue.use(VueRouter);
 
 const routes = [
@@ -29,6 +30,106 @@ const routes = [
         isNav: true,
         component: () =>
           import(/* webpackChunkName: "index" */ "@/views/index.vue")
+      },
+      {
+        path: "/account",
+        name: "account",
+        meta: {
+          title: "账户中心"
+        },
+        isNav: false,
+        redirect: "/account/Basicinformation",
+        component: () =>
+          import(/* webpackChunkName: "account" */ "@/views/account/index.vue"),
+        children: [
+          {
+            path: "/account/Basicinformation",
+            name: "Basicinformation",
+            meta: {
+              title: "基本信息"
+            },
+            icon: "el-icon-document",
+            component: () =>
+              import(
+                /* webpackChunkName: "account" */
+                "@/views/account/Basicinformation.vue"
+              )
+          },
+          {
+            path: "/account/Certification",
+            name: "Certification",
+            meta: {
+              title: "认证中心"
+            },
+            icon: "el-icon-warning-outline",
+            component: RouteView,
+            redirect: "/account/Certification/index",
+            children: [
+              {
+                path: "/account/Certification/index",
+                name: "CertificationIndex",
+                meta: {
+                  title: "认证中心"
+                },
+                component: () =>
+                  import(
+                    /* webpackChunkName: "account" */
+                    "@/views/account/Certification.vue"
+                  )
+              },
+              {
+                path: "/account/Certification/Personl",
+                name: "CertificationPersonl",
+                meta: {
+                  title: "个人认证"
+                },
+                component: Personl
+              },
+              {
+                path: "/account/Certification/Business",
+                name: "CertificationBusiness",
+                meta: {
+                  title: "企业认证"
+                },
+                component: Business
+              },
+              {
+                path: "/account/Certification/Organization",
+                name: "CertificationOrganization",
+                meta: {
+                  title: "组织认证"
+                },
+                component: Organization
+              }
+            ]
+          },
+          {
+            path: "/account/password",
+            name: "password",
+            meta: {
+              title: "修改密码"
+            },
+            icon: "el-icon-user",
+            component: () =>
+              import(
+                /* webpackChunkName: "account" */
+                "@/views/account/password.vue"
+              )
+          },
+          {
+            path: "/account/personlMessage",
+            name: "personlMessage",
+            meta: {
+              title: "站内信息"
+            },
+            icon: "el-icon-bell",
+            component: () =>
+              import(
+                /* webpackChunkName: "account" */
+                "@/views/account/personlMessage.vue"
+              )
+          }
+        ]
       },
       {
         path: "/cooperation",
@@ -52,8 +153,8 @@ const routes = [
         isNav: true,
         component: () =>
           import(
-            /* webpackChunkName: "cooperation" */
-            "@/views//document/index.vue"
+            /* webpackChunkName: "document" */
+            "@/views/document/index.vue"
           ),
         children: []
       },
@@ -65,7 +166,7 @@ const routes = [
         },
         isNav: true,
         component: () =>
-          import(/* webpackChunkName: "cooperation" */ "@/views/help.vue")
+          import(/* webpackChunkName: "help" */ "@/views/help.vue")
       },
       {
         path: "/myApp",
@@ -78,6 +179,18 @@ const routes = [
         redirect: "/myApp/index",
         children: [
           {
+            path: "/myApp/Unauthorized",
+            name: "Unauthorized",
+            meta: {
+              title: "我的应用"
+            },
+            component: () =>
+              import(
+                /* webpackChunkName: "myApp" */
+                "@/views/Unauthorized.vue"
+              )
+          },
+          {
             path: "/myApp/index",
             name: "/myApp/index",
             meta: {
@@ -85,7 +198,7 @@ const routes = [
             },
             component: () =>
               import(
-                /* webpackChunkName: "cooperation" */
+                /* webpackChunkName: "myApp" */
                 "@/views/myApp/index.vue"
               )
           },
@@ -97,11 +210,50 @@ const routes = [
             },
             component: () =>
               import(
-                /* webpackChunkName: "cooperation" */
+                /* webpackChunkName: "myApp" */
                 "@/views/myApp/add.vue"
               )
           }
         ]
+      },
+      {
+        path: "/new",
+        name: "new",
+        meta: {
+          title: "新闻通知"
+        },
+        isNav: false,
+        component: () =>
+          import(
+            /* webpackChunkName: "new" */
+            "@/views/new/new.vue"
+          )
+      },
+      {
+        path: "/new/newRes",
+        name: "newRes",
+        meta: {
+          title: "新闻详情"
+        },
+        isNav: false,
+        component: () =>
+          import(
+            /* webpackChunkName: "new" */
+            "@/views/new/newRes.vue"
+          )
+      },
+      {
+        path: "/ForgotPassword",
+        name: "ForgotPassword",
+        meta: {
+          title: "忘记密码"
+        },
+        isNav: false,
+        component: () =>
+          import(
+            /* webpackChunkName: "ForgotPassword" */
+            "@/views/ForgotPassword.vue"
+          )
       }
     ]
   }
@@ -124,6 +276,7 @@ function findAllTitle(list) {
   }
   return arr;
 }
+
 store.commit("SETROTER", list);
 const router = new VueRouter({
   mode: "history",
