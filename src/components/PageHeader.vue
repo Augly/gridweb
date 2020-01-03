@@ -12,8 +12,11 @@
           <span class="head-tell">服务热线：400-888-8888</span>
         </div>
         <div class="center-right">
+          <el-link type="primary" :underline="false">登录</el-link>
           <span class="head-user">您好, 152****8300</span>
-          <span class="head-scope--out">安全退出</span>
+          <el-link type="info" class="head-scope--out" :underline="false"
+            >安全退出</el-link
+          >
         </div>
       </div>
     </div>

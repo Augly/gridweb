@@ -241,7 +241,7 @@ export default {
       align-items: center;
       justify-content: center;
       font-size: 14px;
-      font-family: PingFang SC;
+      font-family: Source Han Sans CN;
       font-weight: 400;
       color: rgba(204, 204, 204, 1);
       line-height: 26px;

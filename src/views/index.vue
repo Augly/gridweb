@@ -546,7 +546,7 @@ export default {
   align-content: center;
   justify-content: center;
   font-size: 20px;
-  font-family: PingFang SC;
+  font-family: Source Han Sans CN;
   font-weight: 500;
   color: rgba(102, 102, 102, 1);
   .picker {
@@ -569,7 +569,7 @@ export default {
 
 .part-title {
   font-size: 30px;
-  font-family: PingFang SC;
+  font-family: Source Han Sans CN;
   font-weight: bold;
   color: rgba(51, 51, 51, 1);
   .textCenter();
@@ -577,7 +577,7 @@ export default {
 
 .part-describe {
   font-size: 14px;
-  font-family: PingFang SC;
+  font-family: Source Han Sans CN;
   font-weight: 400;
   color: rgba(153, 153, 153, 1);
   .textCenter();
@@ -601,7 +601,7 @@ export default {
 
       .main-title {
         font-size: 20px;
-        font-family: PingFang SC;
+        font-family: Source Han Sans CN;
         font-weight: bold;
         color: rgba(51, 51, 51, 1);
       }
@@ -657,7 +657,7 @@ export default {
         text-align: center;
         font-size: 24px;
         line-height: 24px;
-        font-family: PingFang SC;
+        font-family: Source Han Sans CN;
         font-weight: bold;
         color: rgba(51, 51, 51, 1);
         .marT(25px);
@@ -667,7 +667,7 @@ export default {
         width: 188px;
         height: 43px;
         font-size: 18px;
-        font-family: PingFang SC;
+        font-family: Source Han Sans CN;
         // font-weight: bold;
         color: rgba(153, 153, 153, 1);
         line-height: 20px;

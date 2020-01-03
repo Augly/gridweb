@@ -4,13 +4,13 @@
  * @Author: zero
  * @Date: 2019-12-31 10:59:18
  * @LastEditors  : zero
- * @LastEditTime : 2020-01-02 16:44:32
+ * @LastEditTime : 2020-01-03 10:36:15
  -->
 <template>
   <div>
     <p class="title">{{ myroute }}</p>
     <ul class="message-wrap">
-      <li class="message-list">
+      <li class="message-list" @click="toRes">
         <p class="art_title online">网格化开放平台收费公告补充说明</p>
         <span class="art-date">2019-09-16 11:14:18</span>
       </li>
@@ -36,6 +36,16 @@ export default {
   computed: {
     myroute: function() {
       return this.$route.meta.title;
+    }
+  },
+  methods: {
+    toRes() {
+      this.$router.push({
+        path: "/new/newRes",
+        query: {
+          title: "站内信息"
+        }
+      });
     }
   }
 };
@@ -69,6 +79,7 @@ export default {
     .art_title {
       width: 70%;
     }
+    cursor: pointer;
     border-bottom: 1px solid rgba(236, 235, 235, 1);
   }
 }

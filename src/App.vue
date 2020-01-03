@@ -4,7 +4,7 @@
  * @Author: zero
  * @Date: 2019-12-30 17:46:21
  * @LastEditors  : zero
- * @LastEditTime : 2020-01-02 16:40:42
+ * @LastEditTime : 2020-01-03 12:30:44
  -->
 <template>
   <div id="app">
@@ -38,8 +38,8 @@ html {
   height: 100%;
   padding: 0;
   margin: 0;
-  font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB",
-    "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+  font-family: "Helvetica Neue", Helvetica, "Source Han Sans CN",
+    "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
 }
 .online {
   overflow: hidden;
@@ -118,10 +118,11 @@ ol {
 
 a {
   text-decoration: none;
+  text-decoration: none;
 }
 
 a:hover {
-  text-decoration: underline;
+  text-decoration: none;
 }
 
 sup {

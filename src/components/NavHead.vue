@@ -4,18 +4,24 @@
  * @Author: zero
  * @Date: 2019-12-31 14:28:09
  * @LastEditors  : zero
- * @LastEditTime : 2019-12-31 15:20:45
+ * @LastEditTime : 2020-01-03 10:33:04
  -->
 <template>
   <div>
     <div class="content-head">
-      {{ $route.meta.title }}
+      {{ title || $route.meta.title }}
       <slot name="extra"></slot>
     </div>
   </div>
 </template>
 <script>
 export default {
+  props: {
+    title: {
+      type: String,
+      default: ""
+    }
+  },
   data() {
     return {};
   }

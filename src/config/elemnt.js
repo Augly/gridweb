@@ -4,7 +4,7 @@
  * @Author: zero
  * @Date: 2019-12-30 17:58:50
  * @LastEditors  : zero
- * @LastEditTime : 2020-01-02 10:23:56
+ * @LastEditTime : 2020-01-03 16:05:28
  */
 import Vue from "vue";
 import {
@@ -34,8 +34,14 @@ import {
   Col,
   FormItem,
   Option,
-  Upload
+  Upload,
+  Dialog,
+  Link,
+  Image
 } from "element-ui";
+Vue.use(Link);
+Vue.use(Image);
+Vue.use(Dialog);
 Vue.use(Select);
 Vue.use(Option);
 Vue.use(Upload);

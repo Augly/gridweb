@@ -4,7 +4,7 @@
  * @Author: zero
  * @Date: 2019-12-31 11:40:52
  * @LastEditors  : zero
- * @LastEditTime : 2020-01-02 10:13:26
+ * @LastEditTime : 2020-01-03 14:10:40
  -->
 <template>
   <div class="content-with--1200">
@@ -77,8 +77,12 @@
         </el-table-column>
         <el-table-column label="操作" align="center" header-align="center">
           <template slot-scope="scope">
-            <el-button type="text">{{ scope.index }}</el-button>
-            <el-button type="text">文字按钮</el-button>
+            <el-button @click="handleEditClick(scope.row)" type="text"
+              >编辑</el-button
+            >
+            <el-button @click="handleClick(scope.row)" type="text"
+              >设置模板</el-button
+            >
           </template>
         </el-table-column>
       </el-table>
@@ -189,6 +193,12 @@ export default {
     NavHead
   },
   methods: {
+    handleClick() {
+      this.$router.push({
+        path: "/myApp/template"
+      });
+    },
+    handleEditClick() {},
     add() {
       this.$router.push({
         path: "/myApp/add"

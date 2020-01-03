@@ -4,7 +4,7 @@
  * @Author: zero
  * @Date: 2019-12-30 17:46:21
  * @LastEditors  : zero
- * @LastEditTime : 2020-01-02 19:21:05
+ * @LastEditTime : 2020-01-03 17:13:50
  */
 import Vue from "vue";
 import store from "@/store";
@@ -203,6 +203,18 @@ const routes = [
               )
           },
           {
+            path: "/myApp/template",
+            name: "/myApp/template",
+            meta: {
+              title: "设置模板"
+            },
+            component: () =>
+              import(
+                /* webpackChunkName: "myApp" */
+                "@/views/myApp/template.vue"
+              )
+          },
+          {
             path: "/myApp/add",
             name: "/myApp/add",
             meta: {
@@ -253,6 +265,19 @@ const routes = [
           import(
             /* webpackChunkName: "ForgotPassword" */
             "@/views/ForgotPassword.vue"
+          )
+      },
+      {
+        path: "/register",
+        name: "register",
+        meta: {
+          title: "账户注册"
+        },
+        isNav: false,
+        component: () =>
+          import(
+            /* webpackChunkName: "register" */
+            "@/views/register.vue"
           )
       }
     ]
