@@ -4,16 +4,27 @@
  * @Author: zero
  * @Date: 2020-01-02 14:26:12
  * @LastEditors  : zero
- * @LastEditTime : 2020-01-03 10:31:55
+ * @LastEditTime : 2020-01-06 16:41:48
  -->
 <template>
   <div>
     <p class="title">{{ myroute }}</p>
     <div class="from-wrap">
       <el-form ref="form" :model="form" label-width="100px">
-        <el-form-item label="姓名" required>
+        <el-form-item
+          label="姓名"
+          required
+          prop="name"
+          :rules="[
+            {
+              required: true,
+              message: '请输入姓名',
+              trigger: 'blur'
+            }
+          ]"
+        >
           <el-col :span="20">
-            <el-input v-model="form.name"></el-input>
+            <el-input v-model="form.name" placeholder="请输入姓名"></el-input>
           </el-col>
         </el-form-item>
         <el-form-item label="联系电话" required>
@@ -21,7 +32,18 @@
             17633369350
           </el-col>
         </el-form-item>
-        <el-form-item label="所在地区" required>
+        <el-form-item
+          label="所在地区"
+          required
+          prop="area"
+          :rules="[
+            {
+              required: true,
+              message: '请选择所在地区',
+              trigger: 'change'
+            }
+          ]"
+        >
           <el-col :span="20">
             <el-cascader
               style="width:100%"
@@ -31,9 +53,23 @@
             ></el-cascader>
           </el-col>
         </el-form-item>
-        <el-form-item label="通讯地址" required>
+        <el-form-item
+          label="通讯地址"
+          required
+          prop="adder"
+          :rules="[
+            {
+              required: true,
+              message: '请输入通信地址',
+              trigger: ['change', 'blur']
+            }
+          ]"
+        >
           <el-col :span="20">
-            <el-input v-model="form.name"></el-input>
+            <el-input
+              v-model="form.adder"
+              placeholder="请输入通信地址"
+            ></el-input>
           </el-col>
         </el-form-item>
 
@@ -121,6 +157,7 @@ export default {
         url: "",
         logo: "",
         belongs: "",
+        adder: "",
         area: []
       }
     };

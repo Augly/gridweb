@@ -4,7 +4,7 @@
  * @Author: zero
  * @Date: 2019-12-30 17:46:21
  * @LastEditors  : zero
- * @LastEditTime : 2020-01-03 17:13:50
+ * @LastEditTime : 2020-01-06 15:03:22
  */
 import Vue from "vue";
 import store from "@/store";
@@ -13,7 +13,10 @@ import Home from "../views/Home.vue";
 import RouteView from "@/layout/basic.vue";
 import { Personl, Organization, Business } from "@/components";
 Vue.use(VueRouter);
-
+const routerPush = VueRouter.prototype.push;
+VueRouter.prototype.push = function push(location) {
+  return routerPush.call(this, location).catch(error => error);
+};
 const routes = [
   {
     path: "/",
@@ -25,7 +28,8 @@ const routes = [
         path: "/index",
         name: "index",
         meta: {
-          title: "首页"
+          title: "首页",
+          clearBread: true
         },
         isNav: true,
         component: () =>
@@ -35,7 +39,8 @@ const routes = [
         path: "/account",
         name: "account",
         meta: {
-          title: "账户中心"
+          title: "账户中心",
+          clearBread: true
         },
         isNav: false,
         redirect: "/account/Basicinformation",
@@ -135,7 +140,8 @@ const routes = [
         path: "/cooperation",
         name: "cooperation",
         meta: {
-          title: "业务合作"
+          title: "业务合作",
+          clearBread: true
         },
         isNav: true,
         component: () =>
@@ -148,7 +154,8 @@ const routes = [
         path: "/document",
         name: "document",
         meta: {
-          title: "文档中心"
+          title: "文档中心",
+          clearBread: true
         },
         isNav: true,
         component: () =>
@@ -162,7 +169,8 @@ const routes = [
         path: "/help",
         name: "help",
         meta: {
-          title: "帮助支持"
+          title: "帮助支持",
+          clearBread: true
         },
         isNav: true,
         component: () =>
@@ -172,7 +180,8 @@ const routes = [
         path: "/myApp",
         name: "myApp",
         meta: {
-          title: "我的应用"
+          title: "我的应用",
+          clearBread: true
         },
         isNav: true,
         component: RouteView,
@@ -232,7 +241,8 @@ const routes = [
         path: "/new",
         name: "new",
         meta: {
-          title: "新闻通知"
+          title: "新闻通知",
+          clearBread: true
         },
         isNav: false,
         component: () =>

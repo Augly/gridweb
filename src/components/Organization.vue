@@ -3,42 +3,117 @@
     <p class="title">{{ myroute }}</p>
     <div class="from-wrap">
       <el-form ref="form" :model="form" label-width="120px">
-        <el-form-item label="单位名称" required>
+        <el-form-item
+          label="单位名称"
+          required
+          prop="name"
+          :rules="[
+            {
+              required: true,
+              message: '请输入企业名称',
+              trigger: ['blur', 'change']
+            }
+          ]"
+        >
           <el-col :span="20">
             <el-input v-model="form.name"></el-input>
           </el-col>
         </el-form-item>
         <el-form-item label="组织类型" required>
-          <el-col :span="24">
-            <el-select v-model="form.sys">
+          <el-col :span="20">
+            <el-select v-model="form.sys" style="width:100%">
               <el-option label="区域一" value="shanghai"></el-option>
               <el-option label="区域二" value="beijing"></el-option>
             </el-select>
           </el-col>
         </el-form-item>
-        <el-form-item label="详细地址" required>
+        <el-form-item
+          label="详细地址"
+          required
+          prop="adder"
+          :rules="[
+            {
+              required: true,
+              message: '请输入详细地址',
+              trigger: ['blur', 'change']
+            }
+          ]"
+        >
           <el-col :span="20">
-            <el-input v-model="form.name"></el-input>
+            <el-input v-model="form.adder"></el-input>
           </el-col>
         </el-form-item>
-        <el-form-item label="联系人" required>
+        <el-form-item
+          label="联系人"
+          required
+          prop="linkName"
+          :rules="[
+            {
+              required: true,
+              message: '请输入联系人',
+              trigger: ['blur', 'change']
+            }
+          ]"
+        >
           <el-col :span="20">
-            <el-input v-model="form.name"></el-input>
+            <el-input v-model="form.linkName"></el-input>
           </el-col>
         </el-form-item>
-        <el-form-item label="联系电话" required>
+        <el-form-item
+          label="联系电话"
+          required
+          prop="linkPhone"
+          :rules="[
+            {
+              required: true,
+              message: '请输入手机号',
+              trigger: 'blur'
+            },
+            {
+              validator: VerifyPhone,
+              trigger: ['blur', 'change']
+            }
+          ]"
+        >
           <el-col :span="20">
-            <el-input v-model="form.name"></el-input>
+            <el-input v-model="form.linkPhone"></el-input>
           </el-col>
         </el-form-item>
-        <el-form-item label="联系邮箱" required>
+        <el-form-item
+          label="联系邮箱"
+          required
+          prop="email"
+          :rules="[
+            {
+              required: true,
+              message: '请输入联系邮箱',
+              trigger: 'blur'
+            },
+            {
+              type: 'email',
+              message: '请输入正确的邮箱地址',
+              trigger: ['blur', 'change']
+            }
+          ]"
+        >
           <el-col :span="20">
-            <el-input v-model="form.name"></el-input>
+            <el-input v-model="form.email"></el-input>
           </el-col>
         </el-form-item>
-        <el-form-item label="组织机构代码" required>
+        <el-form-item
+          label="组织机构代码"
+          required
+          prop="card"
+          :rules="[
+            {
+              required: true,
+              message: '请输入社会信用代码',
+              trigger: ['blur', 'change']
+            }
+          ]"
+        >
           <el-col :span="20">
-            <el-input v-model="form.name"></el-input>
+            <el-input v-model="form.card"></el-input>
           </el-col>
         </el-form-item>
         <el-form-item label="组织机构证件">
@@ -75,76 +150,20 @@
   </div>
 </template>
 <script>
+import { VerifyPhone } from "@/utils/util.js";
 export default {
   data() {
     return {
-      props: { multiple: true },
-      options: [
-        {
-          value: 1,
-          label: "东南",
-          children: [
-            {
-              value: 2,
-              label: "上海",
-              children: [
-                { value: 3, label: "普陀" },
-                { value: 4, label: "黄埔" },
-                { value: 5, label: "徐汇" }
-              ]
-            },
-            {
-              value: 7,
-              label: "江苏",
-              children: [
-                { value: 8, label: "南京" },
-                { value: 9, label: "苏州" },
-                { value: 10, label: "无锡" }
-              ]
-            },
-            {
-              value: 12,
-              label: "浙江",
-              children: [
-                { value: 13, label: "杭州" },
-                { value: 14, label: "宁波" },
-                { value: 15, label: "嘉兴" }
-              ]
-            }
-          ]
-        },
-        {
-          value: 17,
-          label: "西北",
-          children: [
-            {
-              value: 18,
-              label: "陕西",
-              children: [
-                { value: 19, label: "西安" },
-                { value: 20, label: "延安" }
-              ]
-            },
-            {
-              value: 21,
-              label: "新疆维吾尔族自治区",
-              children: [
-                { value: 22, label: "乌鲁木齐" },
-                { value: 23, label: "克拉玛依" }
-              ]
-            }
-          ]
-        }
-      ],
+      VerifyPhone,
       form: {
-        sys: "",
         name: "",
         type: "",
-        desc: "",
-        url: "",
-        logo: "",
-        belongs: "",
-        area: []
+        adder: "",
+        linkName: "",
+        linkPhone: "",
+        email: "",
+        card: "",
+        logo: ""
       }
     };
   },
@@ -222,7 +241,7 @@ export default {
     text-align: center;
   }
   .tip {
-    width: 160px;
+    width: 180px;
     height: 100px;
     display: flex;
     align-items: center;
@@ -230,6 +249,7 @@ export default {
     font-size: 14px;
     font-family: Source Han Sans CN;
     font-weight: 400;
+    text-align: center;
     color: rgba(204, 204, 204, 1);
     line-height: 26px;
   }

@@ -12,8 +12,17 @@
           <span class="head-tell">服务热线：400-888-8888</span>
         </div>
         <div class="center-right">
-          <el-link type="primary" :underline="false">登录</el-link>
-          <span class="head-user">您好, 152****8300</span>
+          <el-link type="primary" :underline="false" v-if="isLogin"
+            >登录</el-link
+          >
+          <el-link
+            class="head-user"
+            type="primary"
+            :underline="false"
+            v-else
+            @click="toCount"
+            >您好, 152****8300</el-link
+          >
           <el-link type="info" class="head-scope--out" :underline="false"
             >安全退出</el-link
           >
@@ -40,14 +49,97 @@
         </div>
       </div>
     </div>
+    <div class="mask">
+      <el-dialog :show-close="false" :visible.sync="showLogin" width="500px">
+        <div class="register">
+          <div class="wrap">
+            <h3 class="title">欢迎登录</h3>
+            <p class="tip">请使用您本人的账号密码登录</p>
+            <el-form ref="form" :model="form" class="form">
+              <el-form-item
+                prop="phone"
+                :rules="[
+                  {
+                    required: true,
+                    message: '请输入手机号',
+                    trigger: 'blur'
+                  },
+                  {
+                    validator: VerifyPhone,
+                    trigger: ['blur', 'change']
+                  }
+                ]"
+              >
+                <el-input
+                  v-model="form.phone"
+                  placeholder="请输入手机号"
+                  maxlength="11"
+                ></el-input>
+              </el-form-item>
+              <el-form-item
+                prop="password"
+                :rules="[
+                  {
+                    required: true,
+                    message: '请输入密码',
+                    trigger: 'blur'
+                  },
+                  {
+                    validator: VerifyPassword,
+                    trigger: ['blur', 'change']
+                  }
+                ]"
+              >
+                <el-input
+                  v-model="form.password"
+                  placeholder="请输入密码"
+                  show-password
+                  maxlength="12"
+                  minlength="6"
+                ></el-input>
+              </el-form-item>
+              <el-form-item>
+                <el-col :span="24">
+                  <el-button
+                    type="primary"
+                    style="width:100%"
+                    @click="submitForm('form', login)"
+                    >确认</el-button
+                  >
+                </el-col>
+              </el-form-item>
+              <el-form-item>
+                <el-col :span="12" style="text-align:left;">
+                  <el-link type="primary" :underline="false" @click="forget"
+                    >忘记密码？</el-link
+                  >
+                </el-col>
+                <el-col :span="12" style="text-align:right;">
+                  <el-link :underline="false" @click="resiger"
+                    >没有账号？去注册</el-link
+                  >
+                </el-col>
+              </el-form-item>
+            </el-form>
+          </div>
+        </div>
+      </el-dialog>
+    </div>
   </div>
 </template>
 <script>
 import { mapState } from "vuex";
+import { VerifyPhone, VerifyPassword } from "@/utils/util.js";
 export default {
   data() {
     return {
-      list: []
+      list: [],
+      VerifyPhone,
+      VerifyPassword,
+      form: {
+        phpne: "",
+        password: ""
+      }
     };
   },
   mounted() {
@@ -59,11 +151,53 @@ export default {
     }
   },
   computed: {
+    showLogin: {
+      get: function() {
+        return this.$store.state.showLogin;
+      },
+      set: function(state) {
+        this.$store.dispatch("setLogin", state);
+      }
+    },
     ...mapState({
+      isLogin: state => state.isLogin,
       rotelist: state => state.roterList
     }),
     myroute: function() {
       return this.$route.meta.title;
+    }
+  },
+  methods: {
+    forget() {
+      this.$router.push({
+        path: "/ForgotPassword"
+      });
+    },
+    toCount() {
+      this.$router.push({
+        path: "/account"
+      });
+    },
+    resiger() {
+      this.$router.push({
+        path: "/register"
+      });
+    },
+    submitForm(formName, callback) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          callback();
+        } else {
+          return false;
+        }
+      });
+    },
+    login() {
+      //进行登录
+      console.log("登录操作");
+    },
+    resetForm(formName) {
+      this.$refs[formName].resetFields();
     }
   }
 };
@@ -181,6 +315,41 @@ export default {
             }
           }
         }
+      }
+    }
+  }
+}
+.mask {
+  /deep/ .el-dialog {
+    background: transparent;
+  }
+  /deep/ .el-dialog__header {
+    padding: 0;
+  }
+  .register {
+    width: 500px;
+    height: 540px;
+    margin: -30px -20px;
+    background: url("~@/assets/img/bg.png");
+    background-size: 100% 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .wrap {
+      width: 335px;
+      .title {
+        font-size: 30px;
+        font-family: Source Han Sans CN;
+        font-weight: bold;
+        color: rgba(0, 148, 255, 1);
+      }
+      .tip {
+        font-size: 16px;
+        font-family: Source Han Sans CN;
+        font-weight: 400;
+        color: rgba(153, 153, 153, 1);
+        margin-top: 11px;
+        margin-bottom: 50px;
       }
     }
   }

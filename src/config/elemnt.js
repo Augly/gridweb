@@ -4,7 +4,7 @@
  * @Author: zero
  * @Date: 2019-12-30 17:58:50
  * @LastEditors  : zero
- * @LastEditTime : 2020-01-03 16:05:28
+ * @LastEditTime : 2020-01-06 14:36:31
  */
 import Vue from "vue";
 import {
@@ -37,7 +37,9 @@ import {
   Upload,
   Dialog,
   Link,
-  Image
+  Image,
+  Breadcrumb,
+  BreadcrumbItem
 } from "element-ui";
 Vue.use(Link);
 Vue.use(Image);
@@ -69,3 +71,5 @@ Vue.use(Table);
 Vue.use(TableColumn);
 Vue.use(Pagination);
 Vue.use(Form);
+Vue.use(Breadcrumb);
+Vue.use(BreadcrumbItem);

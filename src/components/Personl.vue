@@ -3,24 +3,82 @@
     <p class="title">{{ myroute }}</p>
     <div class="from-wrap">
       <el-form ref="form" :model="form" label-width="100px">
-        <el-form-item label="姓名" required>
+        <el-form-item
+          label="姓名"
+          required
+          prop="name"
+          :rules="[
+            {
+              required: true,
+              message: '请输入姓名',
+              trigger: ['blur', 'change']
+            }
+          ]"
+        >
           <el-col :span="20">
             <el-input v-model="form.name"></el-input>
           </el-col>
         </el-form-item>
-        <el-form-item label="联系电话" required>
+        <el-form-item
+          label="联系电话"
+          required
+          prop="phone"
+          :rules="[
+            {
+              required: true,
+              message: '请输入手机号',
+              trigger: 'blur'
+            },
+            {
+              validator: VerifyPhone,
+              trigger: ['blur', 'change']
+            }
+          ]"
+        >
           <el-col :span="20">
-            <el-input v-model="form.name"></el-input>
+            <el-input v-model="form.phone"></el-input>
           </el-col>
         </el-form-item>
-        <el-form-item label="联系邮箱" required>
+        <el-form-item
+          label="联系邮箱"
+          required
+          prop="email"
+          :rules="[
+            {
+              required: true,
+              message: '请输入联系邮箱',
+              trigger: 'blur'
+            },
+            {
+              type: 'email',
+              message: '请输入正确的邮箱地址',
+              trigger: ['blur', 'change']
+            }
+          ]"
+        >
           <el-col :span="20">
-            <el-input v-model="form.name"></el-input>
+            <el-input v-model="form.email"></el-input>
           </el-col>
         </el-form-item>
-        <el-form-item label="身份证号码" required>
+        <el-form-item
+          label="身份证号码"
+          required
+          prop="IdCard"
+          :rules="[
+            {
+              required: true,
+              message: '请输入身份证号码',
+              trigger: 'blur'
+            },
+            {
+              validator: VerifyIdCard,
+              message: '请输入正确的身份证号码',
+              trigger: ['blur', 'change']
+            }
+          ]"
+        >
           <el-col :span="20">
-            <el-input v-model="form.name"></el-input>
+            <el-input v-model="form.IdCard"></el-input>
           </el-col>
         </el-form-item>
         <el-form-item label="身份证">
@@ -71,76 +129,18 @@
   </div>
 </template>
 <script>
+import { VerifyPhone, VerifyIdCard } from "@/utils/util.js";
 export default {
   data() {
     return {
-      props: { multiple: true },
-      options: [
-        {
-          value: 1,
-          label: "东南",
-          children: [
-            {
-              value: 2,
-              label: "上海",
-              children: [
-                { value: 3, label: "普陀" },
-                { value: 4, label: "黄埔" },
-                { value: 5, label: "徐汇" }
-              ]
-            },
-            {
-              value: 7,
-              label: "江苏",
-              children: [
-                { value: 8, label: "南京" },
-                { value: 9, label: "苏州" },
-                { value: 10, label: "无锡" }
-              ]
-            },
-            {
-              value: 12,
-              label: "浙江",
-              children: [
-                { value: 13, label: "杭州" },
-                { value: 14, label: "宁波" },
-                { value: 15, label: "嘉兴" }
-              ]
-            }
-          ]
-        },
-        {
-          value: 17,
-          label: "西北",
-          children: [
-            {
-              value: 18,
-              label: "陕西",
-              children: [
-                { value: 19, label: "西安" },
-                { value: 20, label: "延安" }
-              ]
-            },
-            {
-              value: 21,
-              label: "新疆维吾尔族自治区",
-              children: [
-                { value: 22, label: "乌鲁木齐" },
-                { value: 23, label: "克拉玛依" }
-              ]
-            }
-          ]
-        }
-      ],
+      VerifyPhone,
+      VerifyIdCard,
       form: {
-        sys: "",
         name: "",
-        type: "",
-        desc: "",
-        url: "",
-        logo: "",
-        belongs: "",
-        area: []
+        phone: "",
+        email: "",
+        IdCard: "",
+        logo: ""
       }
     };
   },
@@ -219,7 +219,7 @@ export default {
     text-align: center;
   }
   .tip {
-    width: 160px;
+    width: 180px;
     height: 100px;
     display: flex;
     align-items: center;

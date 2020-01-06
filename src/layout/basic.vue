@@ -3,8 +3,8 @@
  * @version: 
  * @Author: zero
  * @Date: 2019-12-31 08:54:51
- * @LastEditors: zero
- * @LastEditTime: 2019-12-31 15:27:22
+ * @LastEditors  : zero
+ * @LastEditTime : 2020-01-06 14:37:27
  -->
 <script>
 export default {
@@ -26,7 +26,7 @@ export default {
     const inKeep = (
       <keep-alive>
         <transition name="page-transition">
-          <router-view />
+          <router-view></router-view>
         </transition>
       </keep-alive>
     );

@@ -4,7 +4,7 @@
  * @Author: zero
  * @Date: 2020-01-02 14:25:35
  * @LastEditors  : zero
- * @LastEditTime : 2020-01-02 16:09:30
+ * @LastEditTime : 2020-01-06 17:17:22
  -->
 <template>
   <div>
@@ -13,7 +13,20 @@
       <template>
         <div>
           <el-form ref="form" :model="form" class="form">
-            <el-form-item>
+            <el-form-item
+              prop="phone"
+              :rules="[
+                {
+                  required: true,
+                  message: '请输入手机号',
+                  trigger: 'blur'
+                },
+                {
+                  validator: VerifyPhone,
+                  trigger: ['blur', 'change']
+                }
+              ]"
+            >
               <el-input
                 v-model="form.phone"
                 placeholder="请输入手机号"
@@ -28,15 +41,41 @@
                 <el-button type="primary">获取验证码</el-button>
               </el-col>
             </el-form-item>
-            <el-form-item>
+            <el-form-item
+              prop="password"
+              :rules="[
+                {
+                  required: true,
+                  message: '请输入密码',
+                  trigger: 'blur'
+                },
+                {
+                  validator: VerifyPassword,
+                  trigger: ['blur', 'change']
+                }
+              ]"
+            >
               <el-input
-                v-model="form.phone"
+                v-model="form.password"
                 placeholder="请输入密码"
               ></el-input>
             </el-form-item>
-            <el-form-item>
+            <el-form-item
+              prop="passwordAgin"
+              :rules="[
+                {
+                  required: true,
+                  message: '请输入密码',
+                  trigger: 'blur'
+                },
+                {
+                  validator: VerifyPassword,
+                  trigger: ['blur', 'change']
+                }
+              ]"
+            >
               <el-input
-                v-model="form.phone"
+                v-model="form.passwordAgin"
                 placeholder="请输入密码"
               ></el-input>
             </el-form-item>
@@ -55,11 +94,16 @@
   </div>
 </template>
 <script>
+import { VerifyPhone, VerifyPassword } from "@/utils/util.js";
 export default {
   data() {
     return {
+      VerifyPhone,
+      VerifyPassword,
       form: {
-        phone: ""
+        phone: "",
+        password: "",
+        passwordAgin: ""
       }
     };
   },

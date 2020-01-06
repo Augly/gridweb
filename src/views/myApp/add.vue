@@ -4,7 +4,7 @@
  * @Author: zero
  * @Date: 2019-12-31 16:22:21
  * @LastEditors  : zero
- * @LastEditTime : 2020-01-02 10:43:14
+ * @LastEditTime : 2020-01-06 15:21:48
  -->
 <template>
   <div class="content-with--1200">
@@ -12,13 +12,35 @@
       <nav-head />
       <div class="from-wrap">
         <el-form ref="form" :model="form" label-width="80px">
-          <el-form-item label="对接系统" required>
+          <el-form-item
+            label="对接系统"
+            required
+            prop="sys"
+            :rules="[
+              {
+                required: true,
+                message: '请选择对接系统',
+                trigger: ['blur', 'change']
+              }
+            ]"
+          >
             <el-select v-model="form.sys">
               <el-option label="区域一" value="shanghai"></el-option>
               <el-option label="区域二" value="beijing"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="选择区域" required>
+          <el-form-item
+            label="选择区域"
+            required
+            prop="area"
+            :rules="[
+              {
+                required: true,
+                message: '请选择应用所属',
+                trigger: ['blur', 'change']
+              }
+            ]"
+          >
             <el-cascader
               :options="options"
               :props="props"
@@ -33,7 +55,18 @@
               <el-radio label="个人"></el-radio>
             </el-radio-group>
           </el-form-item>
-          <el-form-item label="应用类型" required>
+          <el-form-item
+            label="应用类型"
+            required
+            prop="type"
+            :rules="[
+              {
+                required: true,
+                message: '请选择应用类型',
+                trigger: ['blur', 'change']
+              }
+            ]"
+          >
             <el-radio-group v-model="form.type">
               <el-radio label="WAP"></el-radio>
               <el-radio label="安卓应用"></el-radio>
@@ -42,7 +75,18 @@
               <el-radio label="小程序"></el-radio>
             </el-radio-group>
           </el-form-item>
-          <el-form-item label="应用名称" required>
+          <el-form-item
+            label="应用名称"
+            required
+            prop="name"
+            :rules="[
+              {
+                required: true,
+                message: '请输入应用名称',
+                trigger: ['blur', 'change']
+              }
+            ]"
+          >
             <el-col :span="16">
               <el-input v-model="form.name"></el-input>
             </el-col>
@@ -75,7 +119,22 @@
               </div>
             </el-col>
           </el-form-item>
-          <el-form-item label="回调地址" required>
+          <el-form-item
+            label="回调地址"
+            required
+            prop="url"
+            :rules="[
+              {
+                required: true,
+                message: '请输入回调地址',
+                trigger: ['blur', 'change']
+              },
+              {
+                validator: VerifyUrl,
+                trigger: ['blur', 'change']
+              }
+            ]"
+          >
             <el-col :span="16">
               <el-input v-model="form.url"></el-input>
             </el-col>
@@ -90,6 +149,7 @@
   </div>
 </template>
 <script>
+import { VerifyUrl } from "@/utils/util.js";
 import { NavHead } from "@/components";
 export default {
   components: {
@@ -97,6 +157,7 @@ export default {
   },
   data() {
     return {
+      VerifyUrl,
       props: { multiple: true },
       options: [
         {
