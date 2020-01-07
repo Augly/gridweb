@@ -4,33 +4,49 @@
  * @Author: zero
  * @Date: 2020-01-02 18:34:59
  * @LastEditors  : zero
- * @LastEditTime : 2020-01-03 10:35:55
+ * @LastEditTime : 2020-01-07 21:44:02
  -->
 <template>
   <div class="content-with--1200">
-    <div class="content">
+    <div class="content" v-if="info">
       <nav-head :title="$route.query.title" />
       <div class="new-main">
         <div class="new-head">
-          <h4 class="title">网格化平台升级通知</h4>
+          <h4 class="title">{{ info.title }}</h4>
           <p class="source">
-            <span>来源：网格平台</span>
-            <span>时间：2019年08月08日 13:50:21</span>
+            <span>来源：{{ info.author }}</span>
+            <span>时间：{{ info.createTime }}</span>
           </p>
         </div>
-        <div class="new-content"></div>
+        <div class="new-content">
+          {{ info.content }}
+        </div>
       </div>
     </div>
   </div>
 </template>
 <script>
+import { getNewsInfo } from "@/api/new.js";
 import { NavHead } from "@/components";
 export default {
   data() {
-    return {};
+    return {
+      info: null
+    };
   },
   components: {
     NavHead
+  },
+  mounted() {
+    getNewsInfo({
+      newsId: this.$route.query.id
+    })
+      .then(result => {
+        if (result) {
+          this.info = result.data;
+        }
+      })
+      .catch(() => {});
   }
 };
 </script>
@@ -67,6 +83,9 @@ export default {
         color: rgba(102, 102, 102, 1);
         line-height: 26px;
         margin-top: 12px;
+        span {
+          margin-right: 20px;
+        }
       }
     }
     .new-content {

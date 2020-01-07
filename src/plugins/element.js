@@ -1,3 +1,11 @@
+/*
+ * @Descripttion:
+ * @version:
+ * @Author: zero
+ * @Date: 2020-01-07 20:12:07
+ * @LastEditors: zero
+ * @LastEditTime: 2020-01-07 21:45:40
+ */
 import Vue from "vue";
 import {
   Button,
@@ -32,7 +40,8 @@ import {
   Image,
   Breadcrumb,
   BreadcrumbItem,
-  CarouselItem
+  CarouselItem,
+  Carousel
 } from "element-ui";
 Vue.use(Link);
 Vue.use(Image);
@@ -49,6 +58,7 @@ Vue.use(Button);
 Vue.use(RadioGroup);
 Vue.use(Checkbox);
 Vue.use(Switch);
+Vue.use(Carousel);
 Vue.use(CarouselItem);
 Vue.use(DatePicker);
 Vue.use(TimePicker);

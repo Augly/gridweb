@@ -4,7 +4,7 @@
  * @Author: zero
  * @Date: 2020-01-02 18:34:53
  * @LastEditors  : zero
- * @LastEditTime : 2020-01-06 14:30:16
+ * @LastEditTime : 2020-01-07 21:40:20
  -->
 <template>
   <div class="content-with--1200">
@@ -12,21 +12,14 @@
       <nav-head />
       <div class="new-main">
         <div class="new-head">
-          <div class="new-item">
-            <img src="" alt="" />
-            <div class="new-item-tip online">2121</div>
-          </div>
-          <div class="new-item">
-            <img src="" alt="" />
-            <div class="new-item-tip online">2121</div>
-          </div>
-          <div class="new-item">
-            <img src="" alt="" />
-            <div class="new-item-tip online">2121</div>
-          </div>
-          <div class="new-item">
-            <img src="" alt="" />
-            <div class="new-item-tip online">2121</div>
+          <div
+            class="new-item"
+            v-for="(item, index) in hotlist"
+            :key="index"
+            @click="toRes(item)"
+          >
+            <img :src="item.coverImg" alt="" />
+            <div class="new-item-tip online">{{ item.title }}</div>
           </div>
         </div>
         <div class="new-content">
@@ -35,17 +28,24 @@
             <span class="title-time">时间</span>
           </div>
           <ul class="message-wrap">
-            <li class="message-list">
-              <p class="art_title online">网格化开放平台收费公告补充说明</p>
-              <span class="art-date">2019-09-16 11:14:18</span>
+            <li
+              class="message-list"
+              v-for="item in list"
+              :key="item.id"
+              @click="toRes(item)"
+            >
+              <p class="art_title online">{{ item.title }}</p>
+              <span class="art-date">{{ item.createTime }}</span>
             </li>
           </ul>
           <div class="pageGroup">
             <el-pagination
               background
-              :page-size="pagesize"
+              :page-size="pageSize"
+              :page-count="pageNum"
               layout="total,prev, pager, next"
-              :total="1000"
+              :total="total"
+              @current-change="change"
             >
             </el-pagination>
           </div>
@@ -55,13 +55,46 @@
   </div>
 </template>
 <script>
+import { newsList } from "@/api/new.js";
 import { NavHead } from "@/components";
 export default {
   data() {
-    return { pagesize: 5 };
+    return { pageSize: 5, pageNum: 1, total: 0, list: [], hotlist: [] };
   },
   components: {
     NavHead
+  },
+  mounted() {
+    this.getList();
+  },
+  methods: {
+    toRes(item) {
+      this.$router.push({
+        path: "/new/newRes",
+        query: {
+          id: item.id
+        }
+      });
+    },
+    change(val) {
+      console.log(val);
+    },
+    getList() {
+      newsList({
+        pageNum: this.pageNum,
+        pageSize: this.pageSize
+      })
+        .then(result => {
+          if (result) {
+            this.total = result.data.total;
+            this.pageSize = result.data.pageSize;
+            this.pageNum = result.data.pageNum;
+            this.hotlist = result.data.list.slice(0, 4);
+            this.list = result.data.list;
+          }
+        })
+        .catch(() => {});
+    }
   }
 };
 </script>
@@ -84,13 +117,15 @@ export default {
       border-bottom: 1px solid rgba(238, 238, 238, 1);
       padding: 20px 30px;
       .new-item {
+        cursor: pointer;
         .wh(270px, 220px);
         // .bc(rgba(0, 0, 0, 1));
         .floatL();
         margin-left: 14px;
         position: relative;
         img {
-          width: 100% 100%;
+          width: 100%;
+          height: 100%;
         }
         .new-item-tip {
           position: absolute;
@@ -138,6 +173,7 @@ export default {
         min-height: 600px;
         height: auto;
         .message-list {
+          cursor: pointer;
           width: 100%;
           height: 60px;
           box-sizing: border-box;
