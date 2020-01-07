@@ -4,7 +4,7 @@
  * @Author: zero
  * @Date: 2020-01-02 14:26:12
  * @LastEditors  : zero
- * @LastEditTime : 2020-01-06 16:41:48
+ * @LastEditTime : 2020-01-07 18:02:27
  -->
 <template>
   <div>
@@ -14,17 +14,24 @@
         <el-form-item
           label="姓名"
           required
-          prop="name"
+          prop="nickname"
           :rules="[
             {
               required: true,
               message: '请输入姓名',
               trigger: 'blur'
+            },
+            {
+              message: '请输入姓名',
+              trigger: ['blur', 'change']
             }
           ]"
         >
           <el-col :span="20">
-            <el-input v-model="form.name" placeholder="请输入姓名"></el-input>
+            <el-input
+              v-model="form.nickname"
+              placeholder="请输入姓名"
+            ></el-input>
           </el-col>
         </el-form-item>
         <el-form-item label="联系电话" required>
@@ -32,52 +39,12 @@
             17633369350
           </el-col>
         </el-form-item>
-        <el-form-item
-          label="所在地区"
-          required
-          prop="area"
-          :rules="[
-            {
-              required: true,
-              message: '请选择所在地区',
-              trigger: 'change'
-            }
-          ]"
-        >
-          <el-col :span="20">
-            <el-cascader
-              style="width:100%"
-              :options="options"
-              :props="props"
-              v-model="form.area"
-            ></el-cascader>
-          </el-col>
-        </el-form-item>
-        <el-form-item
-          label="通讯地址"
-          required
-          prop="adder"
-          :rules="[
-            {
-              required: true,
-              message: '请输入通信地址',
-              trigger: ['change', 'blur']
-            }
-          ]"
-        >
-          <el-col :span="20">
-            <el-input
-              v-model="form.adder"
-              placeholder="请输入通信地址"
-            ></el-input>
-          </el-col>
-        </el-form-item>
 
         <el-form-item>
           <el-col :span="6" :offset="9"
             ><el-button
               type="primary"
-              @click="onSubmit"
+              @click="submitForm('form', onSubmit)"
               style="width:100%;margin-top:40px;"
               >保存</el-button
             ></el-col
@@ -88,88 +55,44 @@
   </div>
 </template>
 <script>
+import { mapState, mapActions } from "vuex";
+import { USER_INFO } from "@/store/config.js";
+import { setNickname } from "@/api/user.js";
 export default {
   data() {
     return {
-      props: { multiple: false },
-      options: [
-        {
-          value: 1,
-          label: "东南",
-          children: [
-            {
-              value: 2,
-              label: "上海",
-              children: [
-                { value: 3, label: "普陀" },
-                { value: 4, label: "黄埔" },
-                { value: 5, label: "徐汇" }
-              ]
-            },
-            {
-              value: 7,
-              label: "江苏",
-              children: [
-                { value: 8, label: "南京" },
-                { value: 9, label: "苏州" },
-                { value: 10, label: "无锡" }
-              ]
-            },
-            {
-              value: 12,
-              label: "浙江",
-              children: [
-                { value: 13, label: "杭州" },
-                { value: 14, label: "宁波" },
-                { value: 15, label: "嘉兴" }
-              ]
-            }
-          ]
-        },
-        {
-          value: 17,
-          label: "西北",
-          children: [
-            {
-              value: 18,
-              label: "陕西",
-              children: [
-                { value: 19, label: "西安" },
-                { value: 20, label: "延安" }
-              ]
-            },
-            {
-              value: 21,
-              label: "新疆维吾尔族自治区",
-              children: [
-                { value: 22, label: "乌鲁木齐" },
-                { value: 23, label: "克拉玛依" }
-              ]
-            }
-          ]
-        }
-      ],
       form: {
-        sys: "",
-        name: "",
-        type: "",
-        desc: "",
-        url: "",
-        logo: "",
-        belongs: "",
-        adder: "",
-        area: []
+        nickname: ""
       }
     };
   },
+  mounted() {
+    if (this.userInfo) {
+      this.form.nickname = this.userInfo.nickname;
+    }
+  },
   computed: {
+    ...mapState({
+      userInfo: state => state.userInfo
+    }),
     myroute: function() {
       return this.$route.meta.title;
     }
   },
   methods: {
+    ...mapActions(["setUserInfo"]),
     onSubmit() {
-      console.log("submit!");
+      setNickname(this.form)
+        .then(result => {
+          if (result) {
+            let userInfo = this.$ls.get(USER_INFO);
+            userInfo.nickname = this.form.nickname;
+            this.$ls.set(USER_INFO, userInfo, 7 * 24 * 60 * 60 * 1000);
+            this.setUserInfo(userInfo);
+            this.notice("success", "保存个人信息成功!");
+          }
+        })
+        .catch(() => {});
     },
     handleAvatarSuccess(res, file) {
       this.imageUrl = URL.createObjectURL(file.raw);
@@ -179,10 +102,10 @@ export default {
       const isLt2M = file.size / 1024 / 1024 < 2;
 
       if (!isJPG) {
-        this.$message.error("上传头像图片只能是 JPG 格式!");
+        this.$notify.error("上传头像图片只能是 JPG 格式!");
       }
       if (!isLt2M) {
-        this.$message.error("上传头像图片大小不能超过 2MB!");
+        this.$notify.error("上传头像图片大小不能超过 2MB!");
       }
       return isJPG && isLt2M;
     }

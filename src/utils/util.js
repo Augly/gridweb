@@ -4,7 +4,7 @@
  * @Author: zero
  * @Date: 2020-01-06 11:23:40
  * @LastEditors  : zero
- * @LastEditTime : 2020-01-06 16:52:33
+ * @LastEditTime : 2020-01-07 16:58:44
  */
 export function VerifyPhone(rule, value, callback) {
   let regExp = /^1[3456789]\d{9}$/;
@@ -22,7 +22,15 @@ export function VerifyPassword(rule, value, callback) {
     callback();
   }
 }
+export function VerifyArae(rule, value, callback) {
+  console.log(value);
 
+  if (value.length === 0) {
+    callback(new Error("请选择地区"));
+  } else {
+    callback();
+  }
+}
 export function VerifyIdCard(rule, value, callback) {
   let checkProv = function(val) {
     var pattern = /^[1-9][0-9]/;

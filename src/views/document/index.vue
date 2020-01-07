@@ -4,19 +4,29 @@
  * @Author: zero
  * @Date: 2019-12-31 11:40:33
  * @LastEditors  : zero
- * @LastEditTime : 2019-12-31 14:24:50
+ * @LastEditTime : 2020-01-07 18:24:13
  -->
 <template>
   <div class="block-center--1200">
     <div class="wrap">
       <div class="silde">
         <ul class="ul">
-          <li>
-            <div class="ul_title">
+          <li v-for="(item, index) in list" :key="item.id">
+            <div class="ul_title" @click="select(item, index)">
               <i class="el-icon-tickets"></i>
-              <span>平台政策与指引</span>
+              <span>{{ item.typeName }}</span>
             </div>
-            <div class="ul_list ul_list_active">移动应用介绍</div>
+            <div v-if="item.open">
+              <div
+                class="ul_list"
+                :class="selectIndex === index ? 'ul_list_active' : ''"
+                v-for="(item, index) in artList"
+                :key="item.id"
+                @click="selectArt(index)"
+              >
+                {{ item.title }}
+              </div>
+            </div>
           </li>
         </ul>
       </div>
@@ -27,7 +37,60 @@
   </div>
 </template>
 <script>
-export default {};
+import { guideTypes, getGuidesByType } from "@/api/document.js";
+export default {
+  data() {
+    return {
+      list: [],
+      artList: [],
+      selectIndex: 0
+    };
+  },
+  mounted() {
+    this.guideTypes();
+  },
+  methods: {
+    select(item, index) {
+      this.getGuidesByType(index);
+    },
+    selectArt(index) {
+      this.selectIndex = index;
+    },
+    guideTypes() {
+      guideTypes()
+        .then(result => {
+          if (result) {
+            console.log(result);
+            this.list = result.data.map(item => {
+              let s = { ...item };
+              s.open = false;
+              return s;
+            });
+          }
+        })
+        .catch(() => {});
+    },
+    getGuidesByType(index) {
+      console.log(this.list[index]);
+      getGuidesByType({
+        typeId: this.list[index].id
+      })
+        .then(result => {
+          if (result) {
+            console.log(result);
+            this.list = this.list.map(item => {
+              item.open = false;
+              return item;
+            });
+            this.list[index].open = true;
+            this.$set(this.list, index, this.list[index]);
+            this.artList = result.data;
+          }
+        })
+        .catch(() => {});
+    }
+  }
+};
 </script>
 <style lang="less" scoped>
 @import "~@/assets/config.less";
@@ -47,6 +110,7 @@ export default {};
       width: 100%;
       height: auto;
       li {
+        cursor: pointer;
         width: 100%;
         height: auto;
         .ul_title {

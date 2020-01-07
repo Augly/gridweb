@@ -4,7 +4,7 @@
  * @Author: zero
  * @Date: 2019-08-29 10:46:33
  * @LastEditors  : zero
- * @LastEditTime : 2020-01-06 16:34:41
+ * @LastEditTime : 2020-01-07 16:03:27
  */
 import Vue from "vue";
 import router from "@/router";
@@ -24,7 +24,6 @@ const whiteList = [
   "register"
 ];
 router.beforeEach((to, from, next) => {
-  console.log(from);
   if (!from.name && to.name !== "index") {
     next({ path: "/index" });
   }
@@ -38,8 +37,8 @@ router.beforeEach((to, from, next) => {
       store.dispatch("setLogin", false);
       next();
     } else {
-      next();
-      // store.dispatch("setLogin", true);
+      next({ path: "/index" });
+      store.dispatch("setLogin", true);
     }
   }
 });

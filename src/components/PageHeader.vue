@@ -12,18 +12,27 @@
           <span class="head-tell">服务热线：400-888-8888</span>
         </div>
         <div class="center-right">
-          <el-link type="primary" :underline="false" v-if="isLogin"
+          <el-link
+            type="primary"
+            :underline="false"
+            v-if="!userInfo"
+            @click="setLogin(true)"
             >登录</el-link
           >
           <el-link
+            v-if="userInfo"
             class="head-user"
             type="primary"
             :underline="false"
-            v-else
             @click="toCount"
-            >您好, 152****8300</el-link
+            >您好, {{ userInfo.account }}</el-link
           >
-          <el-link type="info" class="head-scope--out" :underline="false"
+          <el-link
+            v-if="userInfo"
+            type="info"
+            class="head-scope--out"
+            :underline="false"
+            @click="logoOut"
             >安全退出</el-link
           >
         </div>
@@ -57,7 +66,7 @@
             <p class="tip">请使用您本人的账号密码登录</p>
             <el-form ref="form" :model="form" class="form">
               <el-form-item
-                prop="phone"
+                prop="account"
                 :rules="[
                   {
                     required: true,
@@ -71,7 +80,7 @@
                 ]"
               >
                 <el-input
-                  v-model="form.phone"
+                  v-model="form.account"
                   placeholder="请输入手机号"
                   maxlength="11"
                 ></el-input>
@@ -128,8 +137,10 @@
   </div>
 </template>
 <script>
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
+import { login, getAreaTree } from "@/api/user.js";
 import { VerifyPhone, VerifyPassword } from "@/utils/util.js";
+import { ACCESS_TOKEN, USER_INFO, CITYLIST } from "@/store/config.js";
 export default {
   data() {
     return {
@@ -137,12 +148,15 @@ export default {
       VerifyPhone,
       VerifyPassword,
       form: {
-        phpne: "",
+        account: "",
         password: ""
       }
     };
   },
   mounted() {
+    if (this.$ls.get(USER_INFO)) {
+      this.setUserInfo(this.$ls.get(USER_INFO));
+    }
     this.list = [];
     for (let index = 0; index < this.rotelist.length; index++) {
       if (this.rotelist[index].isNav) {
@@ -160,14 +174,24 @@ export default {
       }
     },
     ...mapState({
-      isLogin: state => state.isLogin,
-      rotelist: state => state.roterList
+      rotelist: state => state.roterList,
+      userInfo: state => state.userInfo
     }),
     myroute: function() {
       return this.$route.meta.title;
     }
   },
   methods: {
+    ...mapActions(["setLogin", "setUserInfo", "Logout"]),
+    logoOut() {
+      this.Logout()
+        .then(() => {
+          this.$router.replace({
+            path: "/index"
+          });
+        })
+        .catch(() => {});
+    },
     forget() {
       this.$router.push({
         path: "/ForgotPassword"
@@ -183,21 +207,33 @@ export default {
         path: "/register"
       });
     },
-    submitForm(formName, callback) {
-      this.$refs[formName].validate(valid => {
-        if (valid) {
-          callback();
-        } else {
-          return false;
-        }
-      });
-    },
     login() {
       //进行登录
-      console.log("登录操作");
-    },
-    resetForm(formName) {
-      this.$refs[formName].resetFields();
+      login(this.form)
+        .then(result => {
+          if (result) {
+            this.$ls.set(
+              ACCESS_TOKEN,
+              result.data.platformToken,
+              7 * 24 * 60 * 60 * 1000
+            );
+            this.$ls.set(
+              USER_INFO,
+              result.data.userInfo,
+              7 * 24 * 60 * 60 * 1000
+            );
+            this.setUserInfo(result.data.userInfo);
+            this.setLogin(false);
+            getAreaTree()
+              .then(result => {
+                if (result) {
+                  this.$ls.set(CITYLIST, result.data, 7 * 24 * 60 * 60 * 1000);
+                }
+              })
+              .catch(() => {});
+          }
+        })
+        .catch(() => {});
     }
   }
 };
@@ -253,6 +289,7 @@ export default {
   }
 
   .head-nav--white {
+    clear: both;
     .bg--white();
     .mH(82px);
 

@@ -4,7 +4,7 @@
  * @Author: zero
  * @Date: 2019-12-31 11:40:52
  * @LastEditors  : zero
- * @LastEditTime : 2020-01-03 14:10:40
+ * @LastEditTime : 2020-01-07 17:28:05
  -->
 <template>
   <div class="content-with--1200">
@@ -99,6 +99,7 @@
   </div>
 </template>
 <script>
+import { mapState } from "vuex";
 import { NavHead } from "@/components";
 export default {
   data() {
@@ -191,6 +192,18 @@ export default {
   },
   components: {
     NavHead
+  },
+  mounted() {
+    if (this.userInfo.authStatus !== 2) {
+      this.$router.replace({
+        path: "/myApp/Unauthorized"
+      });
+    }
+  },
+  computed: {
+    ...mapState({
+      userInfo: state => state.userInfo
+    })
   },
   methods: {
     handleClick() {

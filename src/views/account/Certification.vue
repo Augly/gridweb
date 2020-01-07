@@ -4,7 +4,7 @@
  * @Author: zero
  * @Date: 2020-01-02 14:25:18
  * @LastEditors  : zero
- * @LastEditTime : 2020-01-02 18:02:09
+ * @LastEditTime : 2020-01-07 17:25:50
  -->
 <template>
   <div>
@@ -39,10 +39,10 @@
   </div>
 </template>
 <script>
+import { mapState } from "vuex";
 export default {
   data() {
     return {
-      show: false,
       activeIndex: 0,
       list: [
         {
@@ -64,6 +64,7 @@ export default {
     };
   },
   components: {},
+
   methods: {
     toRes() {
       if (this.activeIndex === 0) {
@@ -82,6 +83,9 @@ export default {
     }
   },
   computed: {
+    ...mapState({
+      userInfo: state => state.userInfo
+    }),
     myroute: function() {
       return this.$route.meta.title;
     }

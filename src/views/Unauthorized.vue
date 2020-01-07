@@ -4,7 +4,7 @@
  * @Author: zero
  * @Date: 2020-01-02 19:08:38
  * @LastEditors  : zero
- * @LastEditTime : 2020-01-02 19:17:27
+ * @LastEditTime : 2020-01-07 17:30:34
  -->
 <template>
   <div class="content-with--1200">
@@ -15,7 +15,11 @@
         <p class="tip">
           系统检测到您的账户信息未完成认证，请先完成账户认证后可新建应用，点击前往认证——认证中心
         </p>
-        <el-button type="primary" size="small" style="margin-top:47px;"
+        <el-button
+          type="primary"
+          size="small"
+          style="margin-top:47px;"
+          @click="toCenter"
           >去认证</el-button
         >
       </div>
@@ -31,7 +35,13 @@ export default {
   components: {
     NavHead
   },
-  methods: {}
+  methods: {
+    toCenter() {
+      this.$router.replace({
+        path: "/account/Certification"
+      });
+    }
+  }
 };
 </script>
 <style lang="less" scoped>

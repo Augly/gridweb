@@ -61,6 +61,50 @@
           </el-col>
         </el-form-item>
         <el-form-item
+          label="所在地区"
+          required
+          prop="area"
+          :rules="[
+            {
+              required: true,
+              message: '请选择所在地区',
+              trigger: 'blur'
+            },
+            {
+              validator: VerifyArae,
+              trigger: ['blur', 'change']
+            }
+          ]"
+        >
+          <el-col :span="20">
+            <el-cascader
+              style="width:100%"
+              :options="options"
+              :props="props"
+              v-model="form.area"
+            ></el-cascader>
+          </el-col>
+        </el-form-item>
+        <el-form-item
+          label="通讯地址"
+          required
+          prop="adder"
+          :rules="[
+            {
+              required: true,
+              message: '请输入通信地址',
+              trigger: ['change', 'blur']
+            }
+          ]"
+        >
+          <el-col :span="20">
+            <el-input
+              v-model="form.adder"
+              placeholder="请输入通信地址"
+            ></el-input>
+          </el-col>
+        </el-form-item>
+        <el-form-item
           label="身份证号码"
           required
           prop="IdCard"
@@ -129,12 +173,15 @@
   </div>
 </template>
 <script>
-import { VerifyPhone, VerifyIdCard } from "@/utils/util.js";
+import { VerifyPhone, VerifyIdCard, VerifyArae } from "@/utils/util.js";
 export default {
   data() {
     return {
       VerifyPhone,
       VerifyIdCard,
+      VerifyArae,
+      props: { value: "id", label: "areaName" },
+      options: this.$ls.get("cityList") || [],
       form: {
         name: "",
         phone: "",
@@ -161,10 +208,10 @@ export default {
       const isLt2M = file.size / 1024 / 1024 < 2;
 
       if (!isJPG) {
-        this.$message.error("上传头像图片只能是 JPG 格式!");
+        this.$notify.error("上传头像图片只能是 JPG 格式!");
       }
       if (!isLt2M) {
-        this.$message.error("上传头像图片大小不能超过 2MB!");
+        this.$notify.error("上传头像图片大小不能超过 2MB!");
       }
       return isJPG && isLt2M;
     }

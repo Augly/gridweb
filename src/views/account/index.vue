@@ -4,7 +4,7 @@
  * @Author: zero
  * @Date: 2019-12-31 10:54:21
  * @LastEditors  : zero
- * @LastEditTime : 2020-01-02 17:58:48
+ * @LastEditTime : 2020-01-07 17:27:21
  -->
 <template>
   <div class="block-center--1200">
@@ -41,11 +41,9 @@
 <script>
 import { mapState } from "vuex";
 export default {
-  mounted() {
-    console.log(this.rotelist);
-  },
   computed: {
     ...mapState({
+      userInfo: state => state.userInfo,
       rotelist: state => state.roterList[1].children
     }),
     myroute: function() {

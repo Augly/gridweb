@@ -2,15 +2,15 @@
  * @Descripttion:
  * @version:
  * @Author: zero
- * @Date: 2019-07-15 10:33:40
+ * @Date: 2020-01-06 11:23:40
  * @LastEditors  : zero
- * @LastEditTime : 2020-01-06 12:45:05
+ * @LastEditTime : 2020-01-07 16:32:11
  */
 import Vue from "vue";
 import axios from "axios";
 import store from "@/store";
+import { Notification, Loading } from "element-ui";
 import { VueAxios } from "./axios";
-import notification from "element-ui/packages/notification";
 import { ACCESS_TOKEN } from "@/store/config.js";
 
 // 创建 axios 实例
@@ -20,36 +20,35 @@ const service = axios.create({
 });
 
 const err = error => {
-  if (error.message.includes("timeout")) {
+  Loading.service().close();
+  console.log(error.title);
+  if (error.title.includes("timeout")) {
     // 判断请求异常信息中是否含有超时timeout字符串
-    notification.error({
-      message: "提示信息",
-      description: "链接超时"
+    Notification.error({
+      title: "提示信息",
+      message: "链接超时"
     });
   }
   if (error.response) {
     const data = error.response.data;
     const token = Vue.ls.get(ACCESS_TOKEN);
     if (error.response.status === 403) {
-      notification.error({
-        message: "Forbidden",
-        description: data.message
+      Notification.error({
+        title: "提示信息",
+        message: data.message
       });
     }
 
     if (error.response.status === 500) {
-      notification.error({
-        message: "提示信息",
-        description: "服务器异常"
+      Notification.error({
+        title: "提示信息",
+        message: "服务器异常"
       });
     }
-    if (
-      error.response.status === 401 &&
-      !(data.result && data.result.isLogin)
-    ) {
-      notification.error({
-        message: "Unauthorized",
-        description: "Authorization verification failed"
+    if (error.response.status === 401) {
+      Notification.error({
+        title: "提示",
+        message: "请登录!"
       });
       if (token) {
         store.dispatch("Logout").then(() => {
@@ -65,25 +64,26 @@ const err = error => {
 
 // request interceptor
 service.interceptors.request.use(config => {
+  Loading.service({
+    lock: true,
+    text: "数据加载中...",
+    // spinner: "el-icon-loading",
+    background: "rgba(0, 0, 0, 0.7)"
+  });
   const token = Vue.ls.get(ACCESS_TOKEN);
   if (token) {
-    config.headers["OKCLOUD-TOKEN"] = token; // 让每个请求携带自定义 token 请根据实际情况自行修改
+    config.headers["GRID-TOKEN"] = token; // 让每个请求携带自定义 token 请根据实际情况自行修改
   }
   return config;
 }, err);
 
 // response interceptor
 service.interceptors.response.use(response => {
-  if (response.data.code === 10000) {
-    notification.warning({
-      message: "提示",
-      description: response.data.message
-    });
-    return false;
-  } else if (response.data.code === 500) {
-    notification.warning({
-      message: "提示",
-      description: response.data.message
+  Loading.service().close();
+  if (response.data.code === 101) {
+    Notification.warning({
+      title: "提示",
+      message: response.data.message
     });
     return false;
   } else {
