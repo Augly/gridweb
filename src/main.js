@@ -4,7 +4,7 @@
  * @Author: zero
  * @Date: 2019-12-30 17:46:21
  * @LastEditors  : zero
- * @LastEditTime : 2020-01-07 15:30:34
+ * @LastEditTime : 2020-01-08 16:34:49
  */
 import Vue from "vue";
 import App from "./App.vue";
@@ -50,6 +50,31 @@ Vue.mixin({
             message: message
           });
           break;
+      }
+    },
+    handleAvatarSuccess(res, type, callback) {
+      if (res && res.data !== "") {
+        callback(type, res.data);
+      } else {
+        Notification.error("上传图片失败");
+      }
+    },
+    beforeAvatarUpload(file) {
+      if (store.state.info) {
+        const img = file.type.split("/")[1];
+        console.log(img);
+        const isLt5M = file.size / 1024 / 1024 < 5;
+        const allowImg = ["jpeg", "jpg", "png", "bmp"];
+        if (!allowImg.includes(img)) {
+          Notification.error("上传图片只能是 JPG、 PNG、BMP格式!");
+        }
+        if (!isLt5M) {
+          console.log(121);
+          Notification.error("上传头像图片大小不能超过 5MB!");
+        }
+        return allowImg.includes(img) && isLt5M;
+      } else {
+        return false;
       }
     },
     submitForm(formName, callback) {

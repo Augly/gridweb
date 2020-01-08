@@ -4,7 +4,7 @@
  * @Author: zero
  * @Date: 2019-12-31 11:40:52
  * @LastEditors  : zero
- * @LastEditTime : 2020-01-07 17:28:05
+ * @LastEditTime : 2020-01-08 17:34:43
  -->
 <template>
   <div class="content-with--1200">
@@ -194,7 +194,11 @@ export default {
     NavHead
   },
   mounted() {
-    if (this.userInfo.authStatus !== 2) {
+    if (
+      this.$ls.get("userInfo").authStatus !== 2 ||
+      !this.info ||
+      this.info.authStatus !== 2
+    ) {
       this.$router.replace({
         path: "/myApp/Unauthorized"
       });
@@ -202,7 +206,8 @@ export default {
   },
   computed: {
     ...mapState({
-      userInfo: state => state.userInfo
+      userInfo: state => state.userInfo,
+      info: state => state.info
     })
   },
   methods: {

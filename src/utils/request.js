@@ -4,7 +4,7 @@
  * @Author: zero
  * @Date: 2020-01-06 11:23:40
  * @LastEditors  : zero
- * @LastEditTime : 2020-01-07 16:32:11
+ * @LastEditTime : 2020-01-08 11:38:45
  */
 import Vue from "vue";
 import axios from "axios";
@@ -18,6 +18,7 @@ const service = axios.create({
   baseURL: "/api", // api base_url
   timeout: 300000 // 请求超时时间
 });
+console.log(service);
 
 const err = error => {
   Loading.service().close();

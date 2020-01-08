@@ -4,7 +4,7 @@
  * @Author: zero
  * @Date: 2019-12-30 17:46:21
  * @LastEditors  : zero
- * @LastEditTime : 2020-01-07 16:08:46
+ * @LastEditTime : 2020-01-08 16:10:18
  */
 import Vue from "vue";
 import Vuex from "vuex";
@@ -16,11 +16,15 @@ export default new Vuex.Store({
     roterList: [],
     showLogin: false,
     breadList: [],
-    userInfo: null
+    userInfo: null,
+    info: null
   },
   mutations: {
     SETROTER: (state, option) => {
       state.roterList = option;
+    },
+    SETINFO: (state, option) => {
+      state.info = option;
     },
     SETUSERINFO: (state, option) => {
       state.userInfo = option;
@@ -41,6 +45,9 @@ export default new Vuex.Store({
     },
     setLogin({ commit }, option) {
       commit("SETLOGIN", option);
+    },
+    setInfo({ commit }, option) {
+      commit("SETINFO", option);
     },
     setBread({ commit, state }, option) {
       if (option === "clear") {

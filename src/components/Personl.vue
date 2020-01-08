@@ -2,11 +2,16 @@
   <div>
     <p class="title">{{ myroute }}</p>
     <div class="from-wrap">
-      <el-form ref="form" :model="form" label-width="100px">
+      <el-form
+        ref="form"
+        :model="form"
+        label-width="100px"
+        :disabled="info && info.authStatus === 2 ? true : false"
+      >
         <el-form-item
           label="姓名"
           required
-          prop="name"
+          prop="subjectName"
           :rules="[
             {
               required: true,
@@ -16,13 +21,13 @@
           ]"
         >
           <el-col :span="20">
-            <el-input v-model="form.name"></el-input>
+            <el-input v-model="form.subjectName"></el-input>
           </el-col>
         </el-form-item>
         <el-form-item
           label="联系电话"
           required
-          prop="phone"
+          prop="linkPhone"
           :rules="[
             {
               required: true,
@@ -36,7 +41,7 @@
           ]"
         >
           <el-col :span="20">
-            <el-input v-model="form.phone"></el-input>
+            <el-input v-model="form.linkPhone"></el-input>
           </el-col>
         </el-form-item>
         <el-form-item
@@ -88,7 +93,7 @@
         <el-form-item
           label="通讯地址"
           required
-          prop="adder"
+          prop="addressDetails"
           :rules="[
             {
               required: true,
@@ -99,7 +104,7 @@
         >
           <el-col :span="20">
             <el-input
-              v-model="form.adder"
+              v-model="form.addressDetails"
               placeholder="请输入通信地址"
             ></el-input>
           </el-col>
@@ -107,7 +112,7 @@
         <el-form-item
           label="身份证号码"
           required
-          prop="IdCard"
+          prop="cardNum"
           :rules="[
             {
               required: true,
@@ -122,19 +127,24 @@
           ]"
         >
           <el-col :span="20">
-            <el-input v-model="form.IdCard"></el-input>
+            <el-input v-model="form.cardNum"></el-input>
           </el-col>
         </el-form-item>
         <el-form-item label="身份证">
           <el-col :span="6">
             <el-upload
               class="avatar-uploader"
-              action="https://jsonplaceholder.typicode.com/posts/"
+              :action="'/api' + singleUploadImg"
               :show-file-list="false"
-              :on-success="handleAvatarSuccess"
+              :on-success="e => handleAvatarSuccess(e, 'cardFront', success)"
               :before-upload="beforeAvatarUpload"
             >
-              <img v-if="form.logo" :src="form.logo" class="avatar" />
+              <el-image
+                v-if="form.cardFront"
+                :src="form.cardFront"
+                fit="contain"
+                class="avatar"
+              />
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
             <span>正面</span>
@@ -142,15 +152,20 @@
           <el-col :span="6">
             <el-upload
               class="avatar-uploader"
-              action="https://jsonplaceholder.typicode.com/posts/"
+              :action="'/api' + singleUploadImg"
               :show-file-list="false"
-              :on-success="handleAvatarSuccess"
+              :on-success="e => handleAvatarSuccess(e, 'cardBack', success)"
               :before-upload="beforeAvatarUpload"
             >
-              <img v-if="form.logo" :src="form.logo" class="avatar" />
+              <el-image
+                v-if="form.cardBack"
+                :src="form.cardBack"
+                fit="contain"
+                class="avatar"
+              />
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
-            <span>正面</span>
+            <span>反面</span>
           </el-col>
           <el-col :span="12">
             <div class="tip">
@@ -158,11 +173,11 @@
             </div>
           </el-col>
         </el-form-item>
-        <el-form-item>
+        <el-form-item v-if="!(info && info.authStatus === 2)">
           <el-col :span="6" :offset="9"
             ><el-button
               type="primary"
-              @click="onSubmit"
+              @click="submitForm('form', onSubmit)"
               style="width:100%;margin-top:40px;"
               >提交</el-button
             ></el-col
@@ -174,46 +189,82 @@
 </template>
 <script>
 import { VerifyPhone, VerifyIdCard, VerifyArae } from "@/utils/util.js";
+import { submitAuthPer } from "@/api/auth";
+import { mapState } from "vuex";
+import { singleUploadImg } from "@/api/basic.js";
 export default {
   data() {
     return {
       VerifyPhone,
       VerifyIdCard,
       VerifyArae,
-      props: { value: "id", label: "areaName" },
+      singleUploadImg,
+      props: { value: "areaName", label: "areaName" },
       options: this.$ls.get("cityList") || [],
       form: {
-        name: "",
-        phone: "",
+        subjectName: "",
+        addressDetails: "",
         email: "",
-        IdCard: "",
-        logo: ""
+        userId: this.$ls.get("userInfo").id,
+        cardNum: "",
+        cardBack: "",
+        cardFront: "",
+        linkPhone: "",
+        addressProvince: "",
+        addressCity: "",
+        addressRegion: "",
+        area: []
       }
     };
   },
   computed: {
+    ...mapState({
+      info: state => state.info
+    }),
     myroute: function() {
       return this.$route.meta.title;
     }
   },
+  mounted() {
+    if (this.info && this.info.authStatus === 2) {
+      this.form = Object.assign(this.form, this.info.authPer);
+      this.form.area = [
+        this.info.authBase.addressProvince,
+        this.info.authBase.addressCity,
+        this.info.authBase.addressRegion
+      ];
+      this.form.subjectName = this.info.authBase.subjectName;
+      this.form.email = this.info.authBase.email;
+      this.form.addressDetails = this.info.authBase.addressDetails;
+    }
+  },
   methods: {
+    success(type, res) {
+      this.form[type] = res;
+    },
     onSubmit() {
-      console.log("submit!");
-    },
-    handleAvatarSuccess(res, file) {
-      this.imageUrl = URL.createObjectURL(file.raw);
-    },
-    beforeAvatarUpload(file) {
-      const isJPG = file.type === "image/jpeg";
-      const isLt2M = file.size / 1024 / 1024 < 2;
-
-      if (!isJPG) {
-        this.$notify.error("上传头像图片只能是 JPG 格式!");
+      [
+        this.form.addressProvince,
+        this.form.addressCity,
+        this.form.addressRegion
+      ] = this.form.area;
+      let formed = Object.values(this.form).every(item => {
+        return item !== "";
+      });
+      if (formed) {
+        submitAuthPer(this.form)
+          .then(result => {
+            if (result) {
+              this.notice("success", "已提交认证!");
+              this.$router.replace({
+                path: "/account/Certification/index"
+              });
+            }
+          })
+          .catch(() => {});
+      } else {
+        this.notice("warning", "请填写完整!");
       }
-      if (!isLt2M) {
-        this.$notify.error("上传头像图片大小不能超过 2MB!");
-      }
-      return isJPG && isLt2M;
     }
   }
 };

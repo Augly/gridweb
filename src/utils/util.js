@@ -4,8 +4,9 @@
  * @Author: zero
  * @Date: 2020-01-06 11:23:40
  * @LastEditors  : zero
- * @LastEditTime : 2020-01-07 16:58:44
+ * @LastEditTime : 2020-01-08 11:41:12
  */
+export let api = "http://39.106.47.11:8080/platform";
 export function VerifyPhone(rule, value, callback) {
   let regExp = /^1[3456789]\d{9}$/;
   if (regExp.test(value) === false) {

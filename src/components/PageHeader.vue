@@ -139,6 +139,7 @@
 <script>
 import { mapState, mapActions } from "vuex";
 import { login, getAreaTree } from "@/api/user.js";
+import { getMyAuthInfo } from "@/api/auth";
 import { VerifyPhone, VerifyPassword } from "@/utils/util.js";
 import { ACCESS_TOKEN, USER_INFO, CITYLIST } from "@/store/config.js";
 export default {
@@ -156,6 +157,16 @@ export default {
   mounted() {
     if (this.$ls.get(USER_INFO)) {
       this.setUserInfo(this.$ls.get(USER_INFO));
+      getMyAuthInfo()
+        .then(result => {
+          if (result) {
+            let s = this.$ls.get("userInfo");
+            s.authStatus = result.data.authStatus;
+            this.$ls.set("userInfo", s);
+            this.setInfo(result.data);
+          }
+        })
+        .catch(() => {});
     }
     this.list = [];
     for (let index = 0; index < this.rotelist.length; index++) {
@@ -182,7 +193,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["setLogin", "setUserInfo", "Logout"]),
+    ...mapActions(["setLogin", "setUserInfo", "Logout", "setInfo"]),
     logoOut() {
       this.Logout()
         .then(() => {

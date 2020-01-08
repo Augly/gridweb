@@ -4,7 +4,7 @@
  * @Author: zero
  * @Date: 2020-01-02 14:25:18
  * @LastEditors  : zero
- * @LastEditTime : 2020-01-07 17:25:50
+ * @LastEditTime : 2020-01-08 17:26:44
  -->
 <template>
   <div>
@@ -12,9 +12,16 @@
     <div>
       <p class="tip">说明：为保证账户安全，建议您优先完成实名认证。</p>
       <div class="note">
-        实名认证会对您账号归属有很大影响，请正确选择认证类型。企业使用的帐号请勿做个人认证，以避免人员变动、交接账号时可能产生的纠纷，并且可能影响退款和获取发票。
+        {{
+          (info && info.authStatus == 0) || (info && info.authStatus == 3)
+            ? "实名认证会对您账号归属有很大影响，请正确选择认证类型。企业使用的帐号请勿做个人认证，以避免人员变动、交接账号时可能产生的纠纷，并且可能影响退款和获取发票。"
+            : "您提交的认证正在审核中~~~"
+        }}
       </div>
-      <div class="tab">
+      <div
+        class="tab"
+        v-if="(info && info.authStatus == 0) || (info && info.authStatus == 3)"
+      >
         <div class="tab-head">
           <div
             class="tab_item "
@@ -39,7 +46,8 @@
   </div>
 </template>
 <script>
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
+import { getMyAuthInfo } from "@/api/auth";
 export default {
   data() {
     return {
@@ -64,8 +72,52 @@ export default {
     };
   },
   components: {},
+  mounted() {
+    this.getInfo();
+  },
 
   methods: {
+    ...mapActions(["setInfo"]),
+    check() {
+      if (this.userInfo.authType === 1 && this.userInfo.authStatus === 2) {
+        this.$router.replace({
+          path: "/account/Certification/Personl"
+        });
+      } else if (
+        this.userInfo.authType === 2 &&
+        this.userInfo.authStatus === 2
+      ) {
+        this.$router.replace({
+          path: "/account/Certification/Business"
+        });
+      } else if (
+        this.userInfo.authType === 3 &&
+        this.userInfo.authStatus === 2
+      ) {
+        this.$router.replace({
+          path: "/account/Certification/Organization"
+        });
+      }
+    },
+
+    getInfo() {
+      if (this.$ls.get("userInfo").authStatus === 2) {
+        this.check();
+      } else {
+        getMyAuthInfo()
+          .then(result => {
+            if (result) {
+              this.info = result.data;
+              let s = this.$ls.get("userInfo");
+              s.authStatus = result.data.authStatus;
+              this.$ls.set("userInfo", s);
+              this.setInfo(result.data);
+              this.check();
+            }
+          })
+          .catch(() => {});
+      }
+    },
     toRes() {
       if (this.activeIndex === 0) {
         this.$router.push({
@@ -82,9 +134,22 @@ export default {
       }
     }
   },
+  destroyed() {
+    getMyAuthInfo()
+      .then(result => {
+        if (result) {
+          let s = this.$ls.get("userInfo");
+          s.authStatus = result.data.authStatus;
+          this.$ls.set("userInfo", s);
+          this.setInfo(result.data);
+        }
+      })
+      .catch(() => {});
+  },
   computed: {
     ...mapState({
-      userInfo: state => state.userInfo
+      userInfo: state => state.userInfo,
+      info: state => state.info
     }),
     myroute: function() {
       return this.$route.meta.title;

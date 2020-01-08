@@ -158,7 +158,7 @@ export default {
       list: [],
       bannerList: [],
       value: [],
-      props: { value: "id", label: "areaName" },
+      props: { value: "areaName", label: "areaName" },
       options: this.$ls.get("cityList") || []
     };
   },
