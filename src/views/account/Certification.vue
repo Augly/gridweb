@@ -4,7 +4,7 @@
  * @Author: zero
  * @Date: 2020-01-02 14:25:18
  * @LastEditors  : zero
- * @LastEditTime : 2020-01-08 17:26:44
+ * @LastEditTime : 2020-01-08 17:44:46
  -->
 <template>
   <div>
@@ -13,9 +13,13 @@
       <p class="tip">说明：为保证账户安全，建议您优先完成实名认证。</p>
       <div class="note">
         {{
-          (info && info.authStatus == 0) || (info && info.authStatus == 3)
+          info && info.authStatus == 0
             ? "实名认证会对您账号归属有很大影响，请正确选择认证类型。企业使用的帐号请勿做个人认证，以避免人员变动、交接账号时可能产生的纠纷，并且可能影响退款和获取发票。"
-            : "您提交的认证正在审核中~~~"
+            : info && info.authStatus == 1
+            ? "您提交的认证正在审核中~~~"
+            : "您的认证已被拒绝,拒绝原因为" +
+              info.authBase.rejectReason +
+              ",请重新提交审核"
         }}
       </div>
       <div
