@@ -42,7 +42,7 @@ export default {
     toRes() {
       this.$router.push({
         path: "/new/newRes",
-        query: {
+        params: {
           title: "站内信息"
         }
       });

@@ -27,8 +27,12 @@
         <el-form-item label="组织类型" required>
           <el-col :span="20">
             <el-select v-model="form.orgType" style="width:100%">
-              <el-option label="区域一" value="shanghai"></el-option>
-              <el-option label="区域二" value="beijing"></el-option>
+              <el-option
+                v-for="item in typelist"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
             </el-select>
           </el-col>
         </el-form-item>
@@ -195,6 +199,32 @@ import { singleUploadImg } from "@/api/basic.js";
 export default {
   data() {
     return {
+      typelist: [
+        {
+          label: "政府机关",
+          value: 0
+        },
+        {
+          label: "事业单位",
+          value: 1
+        },
+        {
+          label: "社会团体",
+          value: 2
+        },
+        {
+          label: "学校",
+          value: 3
+        },
+        {
+          label: "民办非企业",
+          value: 4
+        },
+        {
+          label: "其它机构",
+          value: 5
+        }
+      ],
       VerifyPhone,
       VerifyArae,
       singleUploadImg,

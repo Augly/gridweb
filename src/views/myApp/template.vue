@@ -9,7 +9,7 @@
 <template>
   <div class="content-with--1200">
     <div class="content">
-      <nav-head :title="$route.query.title" />
+      <nav-head :title="$route.params.title" />
       <ul class="main-ui">
         <li class="main-list">
           <div class="list-main">

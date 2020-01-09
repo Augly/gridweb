@@ -4,7 +4,7 @@
  * @Author: zero
  * @Date: 2020-01-08 17:35:32
  * @LastEditors  : zero
- * @LastEditTime : 2020-01-08 17:40:00
+ * @LastEditTime : 2020-01-09 14:28:16
  */
 import { axios } from "@/utils/request";
 import Qs from "qs";
@@ -45,7 +45,7 @@ export function updateApp(parameter) {
   return axios({
     url: "/app/updateApp",
     method: "post",
-    data: Qs.stringify(parameter)
+    data: parameter
   });
 }
 /**
@@ -72,5 +72,18 @@ export function downloadAppMode(parameter) {
     url: "/app/downloadAppMode",
     method: "post",
     data: parameter
+  });
+}
+/**
+ * @name:chooseProvider
+ * @msg:选择对接系统
+ * @param {type}
+ * @return:
+ */
+export function chooseProvider(parameter) {
+  return axios({
+    url: "/platform/pro/chooseProvider",
+    method: "post",
+    data: Qs.stringify(parameter)
   });
 }

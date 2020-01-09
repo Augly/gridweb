@@ -4,18 +4,18 @@
  * @Author: zero
  * @Date: 2019-12-31 16:22:21
  * @LastEditors  : zero
- * @LastEditTime : 2020-01-06 15:21:48
+ * @LastEditTime : 2020-01-09 14:47:52
  -->
 <template>
   <div class="content-with--1200">
     <div class="content">
-      <nav-head />
+      <nav-head :title="$route.params.title" />
       <div class="from-wrap">
         <el-form ref="form" :model="form" label-width="80px">
           <el-form-item
             label="对接系统"
             required
-            prop="sys"
+            prop="proId"
             :rules="[
               {
                 required: true,
@@ -24,41 +24,30 @@
               }
             ]"
           >
-            <el-select v-model="form.sys">
-              <el-option label="区域一" value="shanghai"></el-option>
-              <el-option label="区域二" value="beijing"></el-option>
+            <el-select v-model="form.proId">
+              <el-option
+                v-for="item in proList"
+                :label="item.sysName"
+                :value="item.id"
+                :key="item.id"
+              ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item
-            label="选择区域"
-            required
-            prop="area"
-            :rules="[
-              {
-                required: true,
-                message: '请选择应用所属',
-                trigger: ['blur', 'change']
-              }
-            ]"
-          >
-            <el-cascader
-              :options="options"
-              :props="props"
-              v-model="form.area"
-              clearable
-            ></el-cascader>
-          </el-form-item>
           <el-form-item label="应用所属" required>
-            <el-radio-group v-model="form.belongs">
-              <el-radio label="政府"></el-radio>
-              <el-radio label="公司"></el-radio>
-              <el-radio label="个人"></el-radio>
+            <el-radio-group v-model="form.ownerType">
+              <el-radio
+                v-for="item in ownerTypeList"
+                :value="item.value"
+                :key="item.value"
+                :label="item.value"
+                >{{ item.label }}</el-radio
+              >
             </el-radio-group>
           </el-form-item>
           <el-form-item
             label="应用类型"
             required
-            prop="type"
+            prop="appType"
             :rules="[
               {
                 required: true,
@@ -67,18 +56,20 @@
               }
             ]"
           >
-            <el-radio-group v-model="form.type">
-              <el-radio label="WAP"></el-radio>
-              <el-radio label="安卓应用"></el-radio>
-              <el-radio label="IOS应用"></el-radio>
-              <el-radio label="公众号"></el-radio>
-              <el-radio label="小程序"></el-radio>
+            <el-radio-group v-model="form.appType">
+              <el-radio
+                v-for="item in appType"
+                :value="item.value"
+                :key="item.value"
+                :label="item.value"
+                >{{ item.label }}</el-radio
+              >
             </el-radio-group>
           </el-form-item>
           <el-form-item
             label="应用名称"
             required
-            prop="name"
+            prop="appName"
             :rules="[
               {
                 required: true,
@@ -88,14 +79,14 @@
             ]"
           >
             <el-col :span="16">
-              <el-input v-model="form.name"></el-input>
+              <el-input v-model="form.appName"></el-input>
             </el-col>
           </el-form-item>
           <el-form-item label="应用介绍">
             <el-col :span="16">
               <el-input
                 type="textarea"
-                v-model="form.desc"
+                v-model="form.appIntro"
                 :autosize="false"
               ></el-input>
             </el-col>
@@ -104,12 +95,17 @@
             <el-col :span="6">
               <el-upload
                 class="avatar-uploader"
-                action="https://jsonplaceholder.typicode.com/posts/"
+                :action="'/api' + singleUploadImg"
                 :show-file-list="false"
-                :on-success="handleAvatarSuccess"
+                :on-success="e => handleAvatarSuccess(e, 'appLogo', success)"
                 :before-upload="beforeAvatarUpload"
               >
-                <img v-if="form.logo" :src="form.logo" class="avatar" />
+                <el-image
+                  v-if="form.appLogo"
+                  :src="form.appLogo"
+                  fit="contain"
+                  class="avatar"
+                />
                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
               </el-upload>
             </el-col>
@@ -122,7 +118,7 @@
           <el-form-item
             label="回调地址"
             required
-            prop="url"
+            prop="callBackUrl"
             :rules="[
               {
                 required: true,
@@ -136,12 +132,14 @@
             ]"
           >
             <el-col :span="16">
-              <el-input v-model="form.url"></el-input>
+              <el-input v-model="form.callBackUrl"></el-input>
             </el-col>
           </el-form-item>
           <el-form-item>
-            <el-button type="info">取消</el-button>
-            <el-button type="primary" @click="onSubmit">提交</el-button>
+            <el-button type="info" @click="cendel">取消</el-button>
+            <el-button type="primary" @click="submitForm('form', onSubmit)"
+              >提交</el-button
+            >
           </el-form-item>
         </el-form>
       </div>
@@ -151,6 +149,13 @@
 <script>
 import { VerifyUrl } from "@/utils/util.js";
 import { NavHead } from "@/components";
+import { singleUploadImg } from "@/api/basic.js";
+import {
+  getAuthInfo,
+  createApp,
+  updateApp,
+  chooseProvider
+} from "@/api/app.js";
 export default {
   components: {
     NavHead
@@ -158,94 +163,117 @@ export default {
   data() {
     return {
       VerifyUrl,
-      props: { multiple: true },
-      options: [
+      singleUploadImg,
+      props: { value: "areaName", label: "areaName" },
+      options: this.$ls.get("cityList") || [],
+      appType: [
         {
-          value: 1,
-          label: "东南",
-          children: [
-            {
-              value: 2,
-              label: "上海",
-              children: [
-                { value: 3, label: "普陀" },
-                { value: 4, label: "黄埔" },
-                { value: 5, label: "徐汇" }
-              ]
-            },
-            {
-              value: 7,
-              label: "江苏",
-              children: [
-                { value: 8, label: "南京" },
-                { value: 9, label: "苏州" },
-                { value: 10, label: "无锡" }
-              ]
-            },
-            {
-              value: 12,
-              label: "浙江",
-              children: [
-                { value: 13, label: "杭州" },
-                { value: 14, label: "宁波" },
-                { value: 15, label: "嘉兴" }
-              ]
-            }
-          ]
+          label: "WAP",
+          value: 0
         },
         {
-          value: 17,
-          label: "西北",
-          children: [
-            {
-              value: 18,
-              label: "陕西",
-              children: [
-                { value: 19, label: "西安" },
-                { value: 20, label: "延安" }
-              ]
-            },
-            {
-              value: 21,
-              label: "新疆维吾尔族自治区",
-              children: [
-                { value: 22, label: "乌鲁木齐" },
-                { value: 23, label: "克拉玛依" }
-              ]
-            }
-          ]
+          label: "安卓应用",
+          value: 1
+        },
+        {
+          label: "IOS应用",
+          value: 2
+        },
+        {
+          label: "公众号",
+          value: 3
+        },
+        {
+          label: "小程序",
+          value: 4
         }
       ],
+      ownerTypeList: [
+        {
+          label: "政府",
+          value: 0
+        },
+        {
+          label: "公司",
+          value: 1
+        },
+        {
+          label: "个人",
+          value: 2
+        }
+      ],
+      proList: [],
       form: {
-        sys: "",
-        name: "",
-        type: "",
-        desc: "",
-        url: "",
-        logo: "",
-        belongs: "",
-        area: []
+        proId: "",
+        proName: "",
+        ownerType: 0,
+        id: "",
+        callBackUrl: "",
+        appType: 0,
+        appName: "",
+        appLogo: "",
+        appIntro: ""
       }
     };
   },
+  mounted() {
+    chooseProvider()
+      .then(result => {
+        if (result) {
+          this.proList = result.data;
+          this.form.proId = result.data[0].id;
+          this.form.proName = result.data[0].sysName;
+        }
+      })
+      .catch(() => {});
+    console.log(this.$route);
+    if (this.$route.params.title) {
+      getAuthInfo({
+        appId: this.$route.params.appId
+      })
+        .then(result => {
+          if (result) {
+            this.form = Object.assign(this.form, result.data);
+          }
+        })
+        .catch(() => {});
+    }
+  },
+  computed: {},
   methods: {
+    success(type, res) {
+      this.form[type] = res;
+    },
+    cendel() {
+      this.$router.replace({
+        path: "/myApp/index"
+      });
+    },
     onSubmit() {
-      console.log("submit!");
-    },
-    handleAvatarSuccess(res, file) {
-      this.imageUrl = URL.createObjectURL(file.raw);
-    },
-    beforeAvatarUpload(file) {
-      const isJPG = file.type === "image/jpeg";
-      const isLt2M = file.size / 1024 / 1024 < 2;
-
-      if (!isJPG) {
-        this.$notify.error("上传头像图片只能是 JPG 格式!");
+      for (var i = 0; i < this.proList.length; i++) {
+        if (this.form.proId === this.proList[i].id) {
+          this.form.proName = this.proList[i].sysName;
+        }
       }
-      if (!isLt2M) {
-        this.$notify.error("上传头像图片大小不能超过 2MB!");
+      if (this.$route.params.title) {
+        updateApp(this.form)
+          .then(result => {
+            if (result) {
+              this.notice("success", "修改应用成功!");
+              this.$router.back(-1);
+            }
+          })
+          .catch(() => {});
+      } else {
+        createApp(this.form)
+          .then(result => {
+            if (result) {
+              this.notice("success", "创建应用成功!");
+              this.$router.back(-1);
+            }
+          })
+          .catch(() => {});
       }
-      return isJPG && isLt2M;
     }
   }
 };

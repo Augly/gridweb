@@ -9,7 +9,7 @@
 <template>
   <div class="content-with--1200">
     <div class="content" v-if="info">
-      <nav-head :title="$route.query.title" />
+      <nav-head :title="$route.params.title" />
       <div class="new-main">
         <div class="new-head">
           <h4 class="title">{{ info.title }}</h4>
@@ -39,7 +39,7 @@ export default {
   },
   mounted() {
     getNewsInfo({
-      newsId: this.$route.query.id
+      newsId: this.$route.params.id
     })
       .then(result => {
         if (result) {

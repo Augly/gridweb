@@ -4,7 +4,7 @@
  * @Author: zero
  * @Date: 2020-01-02 18:34:53
  * @LastEditors  : zero
- * @LastEditTime : 2020-01-07 21:40:20
+ * @LastEditTime : 2020-01-09 14:02:57
  -->
 <template>
   <div class="content-with--1200">
@@ -38,7 +38,7 @@
               <span class="art-date">{{ item.createTime }}</span>
             </li>
           </ul>
-          <div class="pageGroup">
+          <div class="pageGroup" v-if="total !== 0">
             <el-pagination
               background
               :page-size="pageSize"
@@ -71,13 +71,14 @@ export default {
     toRes(item) {
       this.$router.push({
         path: "/new/newRes",
-        query: {
+        params: {
           id: item.id
         }
       });
     },
     change(val) {
-      console.log(val);
+      this.pageNum = val;
+      this.getList();
     },
     getList() {
       newsList({

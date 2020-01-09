@@ -4,7 +4,7 @@
  * @Author: zero
  * @Date: 2020-01-06 11:23:40
  * @LastEditors  : zero
- * @LastEditTime : 2020-01-08 11:38:45
+ * @LastEditTime : 2020-01-09 14:37:12
  */
 import Vue from "vue";
 import axios from "axios";
@@ -81,7 +81,7 @@ service.interceptors.request.use(config => {
 // response interceptor
 service.interceptors.response.use(response => {
   Loading.service().close();
-  if (response.data.code === 101) {
+  if (response.data.code !== 200) {
     Notification.warning({
       title: "提示",
       message: response.data.message

@@ -4,7 +4,7 @@
  * @Author: zero
  * @Date: 2019-12-31 11:40:52
  * @LastEditors  : zero
- * @LastEditTime : 2020-01-08 17:34:43
+ * @LastEditTime : 2020-01-09 14:45:45
  -->
 <template>
   <div class="content-with--1200">
@@ -27,7 +27,7 @@
         size="medium"
       >
         <el-table-column
-          prop="name"
+          prop="appName"
           label="应用名称"
           align="center"
           header-align="center"
@@ -35,7 +35,7 @@
         </el-table-column>
         <el-table-column
           prop="id"
-          label="ID"
+          label="id"
           align="center"
           header-align="center"
         >
@@ -45,24 +45,37 @@
           label="类型"
           align="center"
           header-align="center"
-        >
-        </el-table-column>
-        <el-table-column
-          prop="adder"
-          label="所属地区"
-          align="center"
-          header-align="center"
-        >
+          ><template slot-scope="scope">
+            {{
+              scope.row.ownerType === 0
+                ? " 个人"
+                : scope.row.ownerType === 1
+                ? "公司企业"
+                : "政府机构"
+            }}
+          </template>
         </el-table-column>
         <el-table-column
           prop="sys"
           label="对接系统"
           align="center"
           header-align="center"
-        >
+          ><template slot-scope="scope">
+            {{
+              scope.row.appType === 0
+                ? "web网站"
+                : scope.row.appType === 1
+                ? "android 安卓移动端"
+                : scope.row.appType === 2
+                ? "ios 移动端"
+                : scope.row.appType === 3
+                ? "official 公众号"
+                : "applet 小程序"
+            }}</template
+          >
         </el-table-column>
         <el-table-column
-          prop="time"
+          prop="createTime"
           label="创建时间"
           align="center"
           header-align="center"
@@ -73,25 +86,38 @@
           label="状态"
           align="center"
           header-align="center"
-        >
+          ><template slot-scope="scope">
+            {{
+              scope.row.authStatus === 0
+                ? " 未通过审核"
+                : scope.row.authStatus === 1
+                ? "通过审核"
+                : "审核中"
+            }}
+          </template>
         </el-table-column>
         <el-table-column label="操作" align="center" header-align="center">
           <template slot-scope="scope">
             <el-button @click="handleEditClick(scope.row)" type="text"
               >编辑</el-button
             >
-            <el-button @click="handleClick(scope.row)" type="text"
+            <el-button
+              @click="handleClick(scope.row)"
+              type="text"
+              v-if="scope.row.authStatus === 1"
               >设置模板</el-button
             >
           </template>
         </el-table-column>
       </el-table>
-      <div class="pageGroup">
+      <div class="pageGroup" v-if="total !== 0">
         <el-pagination
           background
-          :page-size="pagesize"
+          :page-size="pageSize"
+          :page-count="pageNum"
           layout="total,prev, pager, next"
-          :total="1000"
+          :total="total"
+          @current-change="change"
         >
         </el-pagination>
       </div>
@@ -101,93 +127,14 @@
 <script>
 import { mapState } from "vuex";
 import { NavHead } from "@/components";
+import { myAppList } from "@/api/app";
 export default {
   data() {
     return {
-      pagesize: 5,
-      tableData: [
-        {
-          id: "wg2344",
-          name: "掌上行",
-          type: "APP",
-          adder: "天津市西青区",
-          sys: "数字政通",
-          time: "2019-09-16     11:14:18",
-          status: "1"
-        },
-        {
-          id: "wg2344",
-          name: "掌上行",
-          type: "APP",
-          adder: "天津市西青区",
-          sys: "数字政通",
-          time: "2019-09-16     11:14:18",
-          status: "1"
-        },
-        {
-          id: "wg2344",
-          name: "掌上行",
-          type: "APP",
-          adder: "天津市西青区",
-          sys: "数字政通",
-          time: "2019-09-16     11:14:18",
-          status: "1"
-        },
-        {
-          id: "wg2344",
-          name: "掌上行",
-          type: "APP",
-          adder: "天津市西青区",
-          sys: "数字政通",
-          time: "2019-09-16     11:14:18",
-          status: "1"
-        },
-        {
-          id: "wg2344",
-          name: "掌上行",
-          type: "APP",
-          adder: "天津市西青区",
-          sys: "数字政通",
-          time: "2019-09-16     11:14:18",
-          status: "1"
-        },
-        {
-          id: "wg2344",
-          name: "掌上行",
-          type: "APP",
-          adder: "天津市西青区",
-          sys: "数字政通",
-          time: "2019-09-16     11:14:18",
-          status: "1"
-        },
-        {
-          id: "wg2344",
-          name: "掌上行",
-          type: "APP",
-          adder: "天津市西青区",
-          sys: "数字政通",
-          time: "2019-09-16     11:14:18",
-          status: "1"
-        },
-        {
-          id: "wg2344",
-          name: "掌上行",
-          type: "APP",
-          adder: "天津市西青区",
-          sys: "数字政通",
-          time: "2019-09-16     11:14:18",
-          status: "1"
-        },
-        {
-          id: "wg2344",
-          name: "掌上行",
-          type: "APP",
-          adder: "天津市西青区",
-          sys: "数字政通",
-          time: "2019-09-16     11:14:18",
-          status: "1"
-        }
-      ]
+      pageSize: 5,
+      pageNum: 1,
+      total: 0,
+      tableData: []
     };
   },
   components: {
@@ -202,6 +149,8 @@ export default {
       this.$router.replace({
         path: "/myApp/Unauthorized"
       });
+    } else {
+      this.getList();
     }
   },
   computed: {
@@ -211,12 +160,38 @@ export default {
     })
   },
   methods: {
+    change(val) {
+      this.pageNum = val;
+      this.getList();
+    },
+    getList: function() {
+      myAppList({
+        pageNum: this.pageNum,
+        pageSize: this.pageSize
+      })
+        .then(result => {
+          this.total = result.data.total;
+          this.pageSize = result.data.pageSize;
+          this.pageNum = result.data.pageNum;
+          this.tableData = result.data.list;
+        })
+        .catch(() => {});
+    },
     handleClick() {
       this.$router.push({
         path: "/myApp/template"
       });
     },
-    handleEditClick() {},
+    handleEditClick(item) {
+      console.log(item);
+      this.$router.push({
+        name: "/myApp/add",
+        params: {
+          title: "编辑应用",
+          appId: item.id
+        }
+      });
+    },
     add() {
       this.$router.push({
         path: "/myApp/add"

@@ -174,14 +174,14 @@
           </el-col>
         </el-form-item>
         <el-form-item v-if="!(info && info.authStatus === 2)">
-          <el-col :span="6" :offset="9"
-            ><el-button
+          <el-col :span="6" :offset="9">
+            <el-button
               type="primary"
               @click="submitForm('form', onSubmit)"
               style="width:100%;margin-top:40px;"
-              >提交</el-button
-            ></el-col
-          >
+              >提交
+            </el-button>
+          </el-col>
         </el-form-item>
       </el-form>
     </div>
@@ -199,7 +199,10 @@ export default {
       VerifyIdCard,
       VerifyArae,
       singleUploadImg,
-      props: { value: "areaName", label: "areaName" },
+      props: {
+        value: "areaName",
+        label: "areaName"
+      },
       options: this.$ls.get("cityList") || [],
       form: {
         subjectName: "",
@@ -271,6 +274,7 @@ export default {
 </script>
 <style lang="less" scoped>
 @import "~@/assets/config.less";
+
 .title {
   font-size: 22px;
   font-family: Source Han Sans CN;
@@ -278,6 +282,7 @@ export default {
   color: rgba(51, 51, 51, 1);
   line-height: 36px;
 }
+
 .from-wrap {
   box-sizing: border-box;
   min-width: 700px;
@@ -286,10 +291,12 @@ export default {
   .padL(150px);
   .padT(50px);
   .padB(150px);
+
   /deep/ .avatar-uploader {
     width: 106px;
     height: 106px;
   }
+
   /deep/ .avatar-uploader .el-upload {
     border: 1px dashed #d9d9d9;
     border-radius: 6px;
@@ -297,9 +304,11 @@ export default {
     position: relative;
     overflow: hidden;
   }
+
   /deep/ .avatar-uploader .el-upload:hover {
     border-color: #409eff;
   }
+
   /deep/ .avatar-uploader-icon {
     font-size: 28px;
     color: #8c939d;
@@ -308,14 +317,17 @@ export default {
     line-height: 106px;
     text-align: center;
   }
+
   /deep/ .avatar {
     width: 106px;
     height: 106px;
     display: block;
   }
+
   .line {
     text-align: center;
   }
+
   .tip {
     width: 180px;
     height: 100px;
