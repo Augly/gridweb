@@ -131,7 +131,7 @@ import { myAppList } from "@/api/app";
 export default {
   data() {
     return {
-      pageSize: 5,
+      pageSize: 10,
       pageNum: 1,
       total: 0,
       tableData: []

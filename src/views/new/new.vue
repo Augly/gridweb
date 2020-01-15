@@ -59,7 +59,7 @@ import { newsList } from "@/api/new.js";
 import { NavHead } from "@/components";
 export default {
   data() {
-    return { pageSize: 5, pageNum: 1, total: 0, list: [], hotlist: [] };
+    return { pageSize: 10, pageNum: 1, total: 0, list: [], hotlist: [] };
   },
   components: {
     NavHead

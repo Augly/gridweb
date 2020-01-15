@@ -38,7 +38,7 @@ import { myMsgList } from "@/api/msg";
 export default {
   data() {
     return {
-      pageSize: 5,
+      pageSize: 10,
       pageNum: 1,
       total: 0,
       list: []

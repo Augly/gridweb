@@ -157,7 +157,7 @@ import { chooseProvider } from "@/api/app.js";
 export default {
   data() {
     return {
-      pageSize: 5,
+      pageSize: 4,
       pageNum: 1,
       list: [],
       proList: [],
