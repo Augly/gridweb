@@ -4,7 +4,7 @@
  * @Author: zero
  * @Date: 2019-12-31 16:22:21
  * @LastEditors  : zero
- * @LastEditTime : 2020-01-09 14:47:52
+ * @LastEditTime : 2020-01-15 15:54:13
  -->
 <template>
   <div class="content-with--1200">
@@ -226,7 +226,6 @@ export default {
         }
       })
       .catch(() => {});
-    console.log(this.$route);
     if (this.$route.params.title) {
       getAuthInfo({
         appId: this.$route.params.appId

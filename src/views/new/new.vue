@@ -4,7 +4,7 @@
  * @Author: zero
  * @Date: 2020-01-02 18:34:53
  * @LastEditors  : zero
- * @LastEditTime : 2020-01-09 14:02:57
+ * @LastEditTime : 2020-01-15 15:33:45
  -->
 <template>
   <div class="content-with--1200">
@@ -71,7 +71,7 @@ export default {
     toRes(item) {
       this.$router.push({
         path: "/new/newRes",
-        params: {
+        query: {
           id: item.id
         }
       });

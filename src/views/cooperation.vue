@@ -4,18 +4,12 @@
  * @Author: zero
  * @Date: 2019-12-31 10:01:54
  * @LastEditors  : zero
- * @LastEditTime : 2019-12-31 15:20:13
+ * @LastEditTime : 2020-01-15 15:13:59
  -->
 <template>
   <div class="content-with--1200">
     <div class="content">
-      <nav-head>
-        <template #extra>
-          <el-button type="primary" size="small" class="right_button"
-            >主要按钮</el-button
-          >
-        </template>
-      </nav-head>
+      <nav-head> </nav-head>
       <ul class="content-listWrap">
         <li>
           <img src="@/assets/img/tianjinheping.png" alt="" />

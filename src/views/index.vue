@@ -43,7 +43,7 @@
         </div>
         <div class="message-content">
           <ul>
-            <li v-for="(item, index) in list" :key="index">
+            <li v-for="(item, index) in list" :key="index" @click="toRes(item)">
               <h6 class="title online">{{ item.title }}</h6>
               <p class="dec twoline">
                 中，从天津市环保局了解到，今年3月，天津大气污染防治启动了“网格化管理”的方法细化式
@@ -56,11 +56,14 @@
     <!-- 查询覆盖区域 -->
     <div class="search">
       <div class="picker">
-        系统：<el-cascader
-          v-model="value"
-          :options="options"
-          :props="props"
-        ></el-cascader>
+        系统：<el-select v-model="proId">
+          <el-option
+            v-for="item in proList"
+            :label="item.sysName"
+            :value="item.id"
+            :key="item.id"
+          ></el-option>
+        </el-select>
       </div>
       <div class="sear">
         覆盖区域：<el-button type="primary" style="width:156px"
@@ -150,12 +153,16 @@
 <script>
 import { newsList } from "@/api/new.js";
 import { bannerList } from "@/api/index";
+import { chooseProvider } from "@/api/app.js";
 export default {
   data() {
     return {
       pageSize: 5,
       pageNum: 1,
       list: [],
+      proList: [],
+      proId: "",
+      proName: "",
       bannerList: [],
       value: [],
       props: { value: "areaName", label: "areaName" },
@@ -163,6 +170,15 @@ export default {
     };
   },
   mounted() {
+    chooseProvider()
+      .then(result => {
+        if (result) {
+          this.proList = result.data;
+          this.proId = result.data[0].id;
+          this.proName = result.data[0].sysName;
+        }
+      })
+      .catch(() => {});
     this.getList();
     this.getBanner();
   },
@@ -176,6 +192,14 @@ export default {
         })
         .catch(() => {});
     },
+    toRes(item) {
+      this.$router.push({
+        path: "/new/newRes",
+        query: {
+          id: item.id
+        }
+      });
+    },
     getList() {
       newsList({
         pageNum: this.pageNum,
@@ -187,9 +211,6 @@ export default {
           }
         })
         .catch(() => {});
-    },
-    handleChange(value) {
-      console.log(value);
     }
   }
 };

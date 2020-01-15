@@ -18,11 +18,11 @@ const service = axios.create({
   baseURL: "/api", // api base_url
   timeout: 300000 // 请求超时时间
 });
-console.log(service);
+// console.log(service);
 
 const err = error => {
   Loading.service().close();
-  console.log(error.title);
+  // console.log(error.title);
   if (error.title.includes("timeout")) {
     // 判断请求异常信息中是否含有超时timeout字符串
     Notification.error({

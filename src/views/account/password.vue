@@ -4,7 +4,7 @@
  * @Author: zero
  * @Date: 2020-01-02 14:25:35
  * @LastEditors  : zero
- * @LastEditTime : 2020-01-07 17:15:27
+ * @LastEditTime : 2020-01-15 15:51:33
  -->
 <template>
   <div>
@@ -76,7 +76,9 @@
                 <el-button type="info" style="width:100%">取消</el-button>
               </el-col>
               <el-col :span="11" :offset="2">
-                <el-button type="primary" style="width:100%">确认</el-button>
+                <el-button type="primary" style="width:100%" @click="toReset"
+                  >确认</el-button
+                >
               </el-col>
             </el-form-item>
           </el-form>
@@ -116,7 +118,7 @@ export default {
             })
               .then(result => {
                 if (result) {
-                  console.log(result);
+                  // console.log(result);
                   this.notice("success", "发送验证成功!");
                   this.code = 60;
                   const f = () => {

@@ -4,79 +4,33 @@
  * @Author: zero
  * @Date: 2020-01-03 14:08:06
  * @LastEditors  : zero
- * @LastEditTime : 2020-01-03 16:18:07
+ * @LastEditTime : 2020-01-14 17:42:05
  -->
 <template>
   <div class="content-with--1200">
     <div class="content">
       <nav-head :title="$route.params.title" />
       <ul class="main-ui">
-        <li class="main-list">
+        <li class="main-list" v-for="(item, index) in list" :key="index">
           <div class="list-main">
             <el-image
-              ref="listImg"
-              :src="url"
+              :ref="`listImg${item.id}`"
+              :src="item.coverImg"
               fit="contain"
               alt=""
               srcset=""
-              :preview-src-list="srcList"
+              :preview-src-list="[item.coverImg]"
               style="width: 100%;height: 290px;"
             />
-            <p>模版名称</p>
+            <p>{{ item.templateName }}</p>
           </div>
           <div class="list-footer">
-            <el-button type="primary" style="width:40%;" @click="look"
+            <el-button type="primary" style="width:40%;" @click="look(item.id)"
               >预览</el-button
             >
-            <el-button type="primary" style="width:40%;">下载资源</el-button>
-          </div>
-        </li>
-        <li class="main-list">
-          <div class="list-main">
-            <el-image
-              :src="url"
-              fit="contain"
-              alt=""
-              srcset=""
-              style="width: 100%;height: 290px;"
-            ></el-image>
-            <p>模版名称</p>
-          </div>
-          <div class="list-footer">
-            <el-button type="primary" style="width:40%;">预览</el-button>
-            <el-button type="primary" style="width:40%;">下载资源</el-button>
-          </div>
-        </li>
-        <li class="main-list">
-          <div class="list-main">
-            <el-image
-              :src="url"
-              fit="contain"
-              alt=""
-              srcset=""
-              style="width: 100%;height: 290px;"
-            />
-            <p>模版名称</p>
-          </div>
-          <div class="list-footer">
-            <el-button type="primary" style="width:40%;">预览</el-button>
-            <el-button type="primary" style="width:40%;">下载资源</el-button>
-          </div>
-        </li>
-        <li class="main-list">
-          <div class="list-main">
-            <el-image
-              :src="url"
-              fit="contain"
-              alt=""
-              srcset=""
-              style="width: 100%;height: 290px;"
-            />
-            <p>模版名称</p>
-          </div>
-          <div class="list-footer">
-            <el-button type="primary" style="width:40%;">预览</el-button>
-            <el-button type="primary" style="width:40%;">下载资源</el-button>
+            <el-button type="primary" style="width:40%;" @click="down(item)"
+              >下载资源</el-button
+            >
           </div>
         </li>
       </ul>
@@ -84,10 +38,12 @@
   </div>
 </template>
 <script>
+import { getTemplates } from "@/api/template";
 import { NavHead } from "@/components";
 export default {
   data() {
     return {
+      list: [],
       url:
         "https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg",
       srcList: [
@@ -99,9 +55,32 @@ export default {
   components: {
     NavHead
   },
+  mounted() {
+    this.getTemplates();
+  },
   methods: {
-    look() {
-      console.log((this.$refs["listImg"].showViewer = true));
+    getTemplates() {
+      getTemplates({
+        providerId: this.$route.query.providerId
+      })
+        .then(result => {
+          if (result) {
+            // console.log(result);
+            this.list = result.data;
+          }
+        })
+        .catch(() => {});
+    },
+    down(item) {
+      var link = document.createElement("a");
+      link.href = item.sourceUrl;
+      const fileName = item.templateName;
+      link.download = fileName;
+      link.click();
+      window.URL.revokeObjectURL(link.href);
+    },
+    look(id) {
+      this.$refs[`listImg${id}`][0].showViewer = true;
     }
   }
 };

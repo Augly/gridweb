@@ -70,7 +70,7 @@ export default {
       guideTypes()
         .then(result => {
           if (result) {
-            console.log(result);
+            // console.log(result);
             this.list = result.data.map(item => {
               let s = { ...item };
               s.open = false;
@@ -81,13 +81,13 @@ export default {
         .catch(() => {});
     },
     getGuidesByType(index) {
-      console.log(this.list[index]);
+      // console.log(this.list[index]);
       getGuidesByType({
         typeId: this.list[index].id
       })
         .then(result => {
           if (result) {
-            console.log(result);
+            // console.log(result);
             this.list = this.list.map(item => {
               item.open = false;
               return item;

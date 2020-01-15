@@ -4,33 +4,44 @@
  * @Author: zero
  * @Date: 2019-12-31 10:59:18
  * @LastEditors  : zero
- * @LastEditTime : 2020-01-03 10:36:15
+ * @LastEditTime : 2020-01-15 15:50:00
  -->
 <template>
   <div>
     <p class="title">{{ myroute }}</p>
     <ul class="message-wrap">
-      <li class="message-list" @click="toRes">
-        <p class="art_title online">网格化开放平台收费公告补充说明</p>
-        <span class="art-date">2019-09-16 11:14:18</span>
+      <li
+        class="message-list"
+        v-for="(item, index) in list"
+        :key="index"
+        @click="toRes(item)"
+      >
+        <p class="art_title online">{{ item.msgTitle }}</p>
+        <span class="art-date">{{ item.createTime }}</span>
       </li>
     </ul>
-    <div class="pageGroup">
+    <div class="pageGroup" v-if="total !== 0">
       <el-pagination
         background
-        :page-size="pagesize"
+        :page-size="pageSize"
+        :page-count="pageNum"
         layout="total,prev, pager, next"
-        :total="1000"
+        :total="total"
+        @current-change="change"
       >
       </el-pagination>
     </div>
   </div>
 </template>
 <script>
+import { myMsgList } from "@/api/msg";
 export default {
   data() {
     return {
-      pagesize: 5
+      pageSize: 5,
+      pageNum: 1,
+      total: 0,
+      list: []
     };
   },
   computed: {
@@ -38,12 +49,36 @@ export default {
       return this.$route.meta.title;
     }
   },
+  mounted() {
+    this.getList();
+  },
   methods: {
-    toRes() {
+    change(val) {
+      this.pageNum = val;
+      this.getList();
+    },
+    getList() {
+      myMsgList({
+        pageNum: this.pageNum,
+        pageSize: this.pageSize
+      })
+        .then(result => {
+          if (result) {
+            // console.log(result.data.list);
+            this.total = result.data.total;
+            this.pageSize = result.data.pageSize;
+            this.pageNum = result.data.pageNum;
+            this.list = result.data.list;
+          }
+        })
+        .catch(() => {});
+    },
+    toRes(item) {
       this.$router.push({
-        path: "/new/newRes",
+        name: "newRes",
         params: {
-          title: "站内信息"
+          title: "站内信息",
+          id: item.id
         }
       });
     }

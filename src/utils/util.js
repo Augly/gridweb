@@ -24,7 +24,7 @@ export function VerifyPassword(rule, value, callback) {
   }
 }
 export function VerifyArae(rule, value, callback) {
-  console.log(value);
+  // console.log(value);
 
   if (value.length === 0) {
     callback(new Error("请选择地区"));

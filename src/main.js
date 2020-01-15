@@ -4,7 +4,7 @@
  * @Author: zero
  * @Date: 2019-12-30 17:46:21
  * @LastEditors  : zero
- * @LastEditTime : 2020-01-08 16:34:49
+ * @LastEditTime : 2020-01-15 15:47:52
  */
 import Vue from "vue";
 import App from "./App.vue";
@@ -16,6 +16,9 @@ import { Notification } from "element-ui";
 import "@/plugins/element.js";
 import "@/router/routeGuard.js";
 import "@/assets/fontSize/font.css";
+import "quill/dist/quill.core.css";
+import "quill/dist/quill.snow.css";
+import "quill/dist/quill.bubble.css";
 Vue.config.productionTip = false;
 let options = {
   namespace: "WEB_", // key prefix
@@ -62,14 +65,14 @@ Vue.mixin({
     beforeAvatarUpload(file) {
       if (store.state.info) {
         const img = file.type.split("/")[1];
-        console.log(img);
+        // console.log(img);
         const isLt5M = file.size / 1024 / 1024 < 5;
         const allowImg = ["jpeg", "jpg", "png", "bmp"];
         if (!allowImg.includes(img)) {
           Notification.error("上传图片只能是 JPG、 PNG、BMP格式!");
         }
         if (!isLt5M) {
-          console.log(121);
+          // console.log(121);
           Notification.error("上传头像图片大小不能超过 5MB!");
         }
         return allowImg.includes(img) && isLt5M;
@@ -80,7 +83,7 @@ Vue.mixin({
     submitForm(formName, callback) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          console.log(valid);
+          // console.log(valid);
           callback();
         } else {
           return false;

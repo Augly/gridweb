@@ -4,7 +4,7 @@
  * @Author: zero
  * @Date: 2019-12-31 11:40:33
  * @LastEditors  : zero
- * @LastEditTime : 2020-01-07 21:05:41
+ * @LastEditTime : 2020-01-15 15:29:15
  -->
 <template>
   <div class="block-center--1200">
@@ -39,7 +39,9 @@
           </p>
         </div>
         <div class="new-content" v-if="artList.length > 0">
-          {{ artList[selectIndex].content }}
+          <div class="ql-container ql-snow">
+            <div class="ql-editor" v-html="artList[selectIndex].content"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -70,7 +72,7 @@ export default {
       guideTypes()
         .then(result => {
           if (result) {
-            console.log(result);
+            // console.log(result);
             this.list = result.data.map(item => {
               let s = { ...item };
               s.open = false;
@@ -81,13 +83,13 @@ export default {
         .catch(() => {});
     },
     getGuidesByType(index) {
-      console.log(this.list[index]);
+      // console.log(this.list[index]);
       getGuidesByType({
         typeId: this.list[index].id
       })
         .then(result => {
           if (result) {
-            console.log(result);
+            // console.log(result);
             this.list = this.list.map(item => {
               item.open = false;
               return item;

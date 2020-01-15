@@ -4,7 +4,7 @@
  * @Author: zero
  * @Date: 2019-12-30 17:46:21
  * @LastEditors  : zero
- * @LastEditTime : 2020-01-07 21:36:43
+ * @LastEditTime : 2020-01-15 15:40:39
  -->
 <template>
   <div id="app">
@@ -164,5 +164,11 @@ textarea {
 .el-cascader__dropdown {
   height: 350px;
   overflow-y: auto;
+}
+.ql-container.ql-snow {
+  border: none !important;
+}
+.ql-container .ql-snow {
+  border: none !important;
 }
 </style>

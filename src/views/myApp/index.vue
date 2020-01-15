@@ -4,7 +4,7 @@
  * @Author: zero
  * @Date: 2019-12-31 11:40:52
  * @LastEditors  : zero
- * @LastEditTime : 2020-01-09 14:45:45
+ * @LastEditTime : 2020-01-14 17:27:40
  -->
 <template>
   <div class="content-with--1200">
@@ -177,13 +177,16 @@ export default {
         })
         .catch(() => {});
     },
-    handleClick() {
+    handleClick(item) {
       this.$router.push({
-        path: "/myApp/template"
+        path: "/myApp/template",
+        query: {
+          providerId: item.proId
+        }
       });
     },
     handleEditClick(item) {
-      console.log(item);
+      // console.log(item);
       this.$router.push({
         name: "/myApp/add",
         params: {

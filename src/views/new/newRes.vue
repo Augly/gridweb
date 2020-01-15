@@ -4,7 +4,7 @@
  * @Author: zero
  * @Date: 2020-01-02 18:34:59
  * @LastEditors  : zero
- * @LastEditTime : 2020-01-07 21:44:02
+ * @LastEditTime : 2020-01-15 15:54:38
  -->
 <template>
   <div class="content-with--1200">
@@ -19,13 +19,16 @@
           </p>
         </div>
         <div class="new-content">
-          {{ info.content }}
+          <div class="ql-container ql-snow">
+            <div class="ql-editor" v-html="info.content"></div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </template>
 <script>
+import { msgInfo } from "@/api/msg";
 import { getNewsInfo } from "@/api/new.js";
 import { NavHead } from "@/components";
 export default {
@@ -38,15 +41,33 @@ export default {
     NavHead
   },
   mounted() {
-    getNewsInfo({
-      newsId: this.$route.params.id
-    })
-      .then(result => {
-        if (result) {
-          this.info = result.data;
-        }
+    // console.log(this.$route.params.title);
+    if (this.$route.params.title) {
+      msgInfo({
+        msgId: this.$route.params.id
       })
-      .catch(() => {});
+        .then(result => {
+          if (result) {
+            this.info = {
+              title: result.data.msgTitle,
+              author: result.data.createUser,
+              createTime: result.data.createTime,
+              content: result.data.msgContent
+            };
+          }
+        })
+        .catch(() => {});
+    } else {
+      getNewsInfo({
+        newsId: this.$route.query.id
+      })
+        .then(result => {
+          if (result) {
+            this.info = result.data;
+          }
+        })
+        .catch(() => {});
+    }
   }
 };
 </script>

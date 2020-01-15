@@ -4,7 +4,7 @@
  * @Author: zero
  * @Date: 2020-01-02 19:19:15
  * @LastEditors  : zero
- * @LastEditTime : 2020-01-07 16:31:32
+ * @LastEditTime : 2020-01-15 15:54:32
  -->
 <template>
   <div class="content-with--1200">
@@ -127,7 +127,7 @@ export default {
             })
               .then(result => {
                 if (result) {
-                  console.log(result);
+                  // console.log(result);
                   this.notice("success", "发送验证成功!");
                   this.code = 60;
                   const f = () => {

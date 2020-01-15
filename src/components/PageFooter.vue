@@ -4,7 +4,7 @@
  * @Author: zero
  * @Date: 2019-12-31 08:55:28
  * @LastEditors  : zero
- * @LastEditTime : 2019-12-31 10:12:38
+ * @LastEditTime : 2020-01-14 17:48:32
  -->
 <template>
   <div style="width:100%">
@@ -22,7 +22,9 @@
         </p>
       </div>
     </div>
-    <div class="footer-bar"></div>
+    <div class="footer-bar">
+      Copyright © 2019 天津四立科技有限责任公司 备案号：津ICP备19004775号-1
+    </div>
   </div>
 </template>
 <style lang="less" scoped>
@@ -67,5 +69,11 @@
   width: 100%;
   height: 61px;
   background: rgba(43, 43, 43, 1);
+  font-family: Source Han Sans CN;
+  font-weight: 400;
+  font-size: 12px;
+  text-align: center;
+  line-height: 61px;
+  color: rgba(255, 255, 255, 0.4);
 }
 </style>
