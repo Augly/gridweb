@@ -219,7 +219,7 @@ export default {
   },
   mounted() {
     if (this.info && this.info.authStatus === 2) {
-      this.form = Object.assign(this.form, this.info.authOrg);
+      this.form = Object.assign(this.form, this.info.authBus);
       this.form.area = [
         this.info.authBase.addressProvince,
         this.info.authBase.addressCity,

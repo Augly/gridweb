@@ -17,13 +17,13 @@
       <div class="block-center--1200">
         <div class="message-head">
           <div class="message-head--title">
-            <img
+            <!-- <img
               src="@/assets/img/xiaoxi@2x.png"
               alt=""
               srcset=""
               class="message-icon"
-            />
-            <span class="title">消息</span>
+            /> -->
+            <span class="title">新闻咨询</span>
           </div>
           <div
             class="message-head--more"
@@ -262,7 +262,7 @@ export default {
         font-family: Source Han Sans CN;
         font-weight: bold;
         color: rgba(40, 40, 40, 1);
-        .marl(10px);
+        .marl(45px);
       }
     }
 

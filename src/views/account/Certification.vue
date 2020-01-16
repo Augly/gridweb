@@ -4,7 +4,7 @@
  * @Author: zero
  * @Date: 2020-01-02 14:25:18
  * @LastEditors  : zero
- * @LastEditTime : 2020-01-08 17:44:46
+ * @LastEditTime : 2020-01-15 20:48:28
  -->
 <template>
   <div>
@@ -83,21 +83,16 @@ export default {
   methods: {
     ...mapActions(["setInfo"]),
     check() {
-      if (this.userInfo.authType === 1 && this.userInfo.authStatus === 2) {
+      console.log(this.info);
+      if (this.info.authType === 1 && this.info.authStatus === 2) {
         this.$router.replace({
           path: "/account/Certification/Personl"
         });
-      } else if (
-        this.userInfo.authType === 2 &&
-        this.userInfo.authStatus === 2
-      ) {
+      } else if (this.info.authType === 2 && this.info.authStatus === 2) {
         this.$router.replace({
           path: "/account/Certification/Business"
         });
-      } else if (
-        this.userInfo.authType === 3 &&
-        this.userInfo.authStatus === 2
-      ) {
+      } else if (this.info.authType === 3 && this.info.authStatus === 2) {
         this.$router.replace({
           path: "/account/Certification/Organization"
         });
@@ -105,22 +100,24 @@ export default {
     },
 
     getInfo() {
-      if (this.$ls.get("userInfo").authStatus === 2) {
-        this.check();
-      } else {
-        getMyAuthInfo()
-          .then(result => {
-            if (result) {
-              this.info = result.data;
-              let s = this.$ls.get("userInfo");
-              s.authStatus = result.data.authStatus;
-              this.$ls.set("userInfo", s);
-              this.setInfo(result.data);
-              this.check();
-            }
-          })
-          .catch(() => {});
-      }
+      // if (this.$ls.get("userInfo").authStatus === 2) {
+      //   this.check();
+      // } else {
+      getMyAuthInfo()
+        .then(result => {
+          if (result) {
+            // this.info = result.data;
+            let s = this.$ls.get("userInfo");
+            s.authStatus = result.data.authStatus;
+            this.$ls.set("userInfo", s);
+            console.log(result.data);
+            console.log(this.$ls.get("userInfo"));
+            this.setInfo(result.data);
+            this.check();
+          }
+        })
+        .catch(() => {});
+      // }
     },
     toRes() {
       if (this.activeIndex === 0) {

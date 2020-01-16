@@ -4,7 +4,7 @@
  * @Author: zero
  * @Date: 2019-12-31 11:40:33
  * @LastEditors  : zero
- * @LastEditTime : 2020-01-07 21:09:01
+ * @LastEditTime : 2020-01-15 21:02:47
  -->
 <template>
   <div class="block-center--1200">
@@ -39,7 +39,9 @@
           </p>
         </div>
         <div class="new-content" v-if="artList.length > 0">
-          {{ artList[selectIndex].content }}
+          <div class="ql-container ql-snow">
+            <div class="ql-editor" v-html="artList[selectIndex].contet"></div>
+          </div>
         </div>
       </div>
     </div>

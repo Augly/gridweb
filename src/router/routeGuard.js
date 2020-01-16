@@ -4,7 +4,7 @@
  * @Author: zero
  * @Date: 2019-08-29 10:46:33
  * @LastEditors  : zero
- * @LastEditTime : 2020-01-07 16:03:27
+ * @LastEditTime : 2020-01-16 14:22:29
  */
 import Vue from "vue";
 import router from "@/router";
@@ -16,7 +16,6 @@ const whiteList = [
   "index",
   "cooperation",
   "registerResult",
-  "document",
   "help",
   "new",
   "newRes",

@@ -11,7 +11,7 @@
         <el-form-item
           label="单位名称"
           required
-          prop="subjectName "
+          prop="subjectName"
           :rules="[
             {
               required: true,
@@ -202,27 +202,27 @@ export default {
       typelist: [
         {
           label: "政府机关",
-          value: 0
+          value: "0"
         },
         {
           label: "事业单位",
-          value: 1
+          value: "1"
         },
         {
           label: "社会团体",
-          value: 2
+          value: "2"
         },
         {
           label: "学校",
-          value: 3
+          value: "3"
         },
         {
           label: "民办非企业",
-          value: 4
+          value: "4"
         },
         {
           label: "其它机构",
-          value: 5
+          value: "5"
         }
       ],
       VerifyPhone,

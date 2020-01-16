@@ -4,7 +4,7 @@
  * @Author: zero
  * @Date: 2019-12-31 11:40:52
  * @LastEditors  : zero
- * @LastEditTime : 2020-01-14 17:27:40
+ * @LastEditTime : 2020-01-15 20:51:58
  -->
 <template>
   <div class="content-with--1200">
@@ -47,21 +47,6 @@
           header-align="center"
           ><template slot-scope="scope">
             {{
-              scope.row.ownerType === 0
-                ? " 个人"
-                : scope.row.ownerType === 1
-                ? "公司企业"
-                : "政府机构"
-            }}
-          </template>
-        </el-table-column>
-        <el-table-column
-          prop="sys"
-          label="对接系统"
-          align="center"
-          header-align="center"
-          ><template slot-scope="scope">
-            {{
               scope.row.appType === 0
                 ? "web网站"
                 : scope.row.appType === 1
@@ -71,8 +56,15 @@
                 : scope.row.appType === 3
                 ? "official 公众号"
                 : "applet 小程序"
-            }}</template
-          >
+            }}
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="proName"
+          label="对接系统"
+          align="center"
+          header-align="center"
+        >
         </el-table-column>
         <el-table-column
           prop="createTime"
