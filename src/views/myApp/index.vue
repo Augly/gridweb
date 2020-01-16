@@ -4,7 +4,7 @@
  * @Author: zero
  * @Date: 2019-12-31 11:40:52
  * @LastEditors  : zero
- * @LastEditTime : 2020-01-15 20:51:58
+ * @LastEditTime : 2020-01-16 15:07:36
  -->
 <template>
   <div class="content-with--1200">
@@ -117,9 +117,10 @@
   </div>
 </template>
 <script>
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 import { NavHead } from "@/components";
 import { myAppList } from "@/api/app";
+import { getMyAuthInfo } from "@/api/auth";
 export default {
   data() {
     return {
@@ -133,17 +134,23 @@ export default {
     NavHead
   },
   mounted() {
-    if (
-      this.$ls.get("userInfo").authStatus !== 2 ||
-      !this.info ||
-      this.info.authStatus !== 2
-    ) {
-      this.$router.replace({
-        path: "/myApp/Unauthorized"
-      });
-    } else {
-      this.getList();
-    }
+    getMyAuthInfo()
+      .then(result => {
+        if (result) {
+          let s = this.$ls.get("userInfo");
+          s.authStatus = result.data.authStatus;
+          this.$ls.set("userInfo", s);
+          this.setInfo(result.data);
+          if (result.data.authStatus !== 2) {
+            this.$router.replace({
+              path: "/myApp/Unauthorized"
+            });
+          } else {
+            this.getList();
+          }
+        }
+      })
+      .catch(() => {});
   },
   computed: {
     ...mapState({
@@ -152,6 +159,7 @@ export default {
     })
   },
   methods: {
+    ...mapActions(["setInfo"]),
     change(val) {
       this.pageNum = val;
       this.getList();
