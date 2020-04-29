@@ -3,8 +3,8 @@
  * @version:
  * @Author: zero
  * @Date: 2019-12-30 17:46:21
- * @LastEditors  : zero
- * @LastEditTime : 2020-01-07 10:17:49
+ * @LastEditors: zero
+ * @LastEditTime: 2020-04-29 19:26:04
  */
 import Vue from "vue";
 import store from "@/store";
@@ -285,7 +285,7 @@ function findAllTitle(list) {
   }
   return arr;
 }
-
+console.log(list);
 store.commit("SETROTER", list);
 const router = new VueRouter({
   mode: "hash",
